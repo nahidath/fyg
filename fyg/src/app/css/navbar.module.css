@@ -2,8 +2,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #101011;
+  background-color: #070502;
   width: 100%;
+  box-shadow: 10px 0 5px 3px #656565;
+
 }
 
 .logo {
