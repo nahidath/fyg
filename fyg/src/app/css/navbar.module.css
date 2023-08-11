@@ -1,0 +1,37 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #101011;
+  width: 100%;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fYG1 {
+  margin-top: -2rem;
+  color: var(--color-white);
+  text-decoration: none;
+}
+
+.loginParent {
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+  padding-right: 1rem;
+}
+
+.login {
+  color: var(--color-white);
+  text-decoration: none;
+  padding-left: 5px;
+}
+.linkLogo {
+  text-decoration: none;
+}
