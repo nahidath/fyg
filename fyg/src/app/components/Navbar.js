@@ -1,4 +1,4 @@
-import styles from "./css/navbar.module.css";
+import styles from "../css/navbar.module.css";
 import Link from "next/link";
 
 const Navbar = () => {
@@ -16,9 +16,9 @@ const Navbar = () => {
         </div>
       </Link>
       <div className={styles.loginParent}>
-        <a href="#" className={styles.login}>
+        <Link href="/login" className={styles.login}>
           Login |
-        </a>
+        </Link>
 
         <a href="#" className={styles.login}>
           Register
