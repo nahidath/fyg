@@ -1,6 +1,12 @@
 import styles from "./home.module.css";
 
 const Home1 = () => {
+
+  const newGamesList = () => {
+
+  }
+
+
   return (
     <div className={styles.container}>
       <div className={styles.desktop11}>
