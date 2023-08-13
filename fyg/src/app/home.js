@@ -1,30 +1,38 @@
+'use client'
+
 import styles from "./home.module.css";
 import axios from "axios";
-import {useEffect, useState} from "react";
-import {REACT_APP_API_KEY} from "@env";
+import { useState, useEffect } from "react";
 import Card from "@/app/components/Card";
+import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
+import Genre from "@/app/components/Genre";
 
 const Home1 = () => {
   const [newGames, setNewGames] = useState([]);
   const [popularGames, setPopularGames] = useState([]);
   const [genres, setGenres] = useState([]);
-  let apiKey = REACT_APP_API_KEY;
+  let apiKey = process.env.NEXT_PUBLIC_APP_API_KEY;
 
+
+  const getTodayDate = () => {
+      let today = new Date();
+      let dd = today.getDate();
+      let mm = today.getMonth() + 1; //January is 0 so need to add 1 to make it 1!
+      let yyyy = today.getFullYear();
+      if (dd < 10) {
+          dd = "0" + dd;
+      }
+      if (mm < 10) {
+          mm = "0" + mm;
+      }
+      today = yyyy + "-" + mm + "-" + dd;
+      return today;
+  }
 
   const getNewGamesList = () => {
     //get the date of today with format YYYY-MM-DD
-    let today = new Date();
-    let dd = today.getDate();
-    let mm = today.getMonth() + 1; //January is 0 so need to add 1 to make it 1!
-    let yyyy = today.getFullYear();
-    if (dd < 10) {
-        dd = "0" + dd;
-    }
-    if (mm < 10) {
-        mm = "0" + mm;
-    }
-    today = yyyy + "-" + mm + "-" + dd;
-    axios.get(`https://api.rawg.io/api/games`, {params:{apiKey: apiKey, ordering: "-relased", dates: "2023-01-01,"+today, page_size:3}})
+
+    axios.get(`https://api.rawg.io/api/games`, {params:{key: apiKey, ordering: "-relased", page_size:3}})
         .then((res) => {
             setNewGames(res.data.results);
             console.log(res.data.results);
@@ -33,7 +41,7 @@ const Home1 = () => {
   }
 
   const getPopularGames = () => {
-    axios.get(`https://api.rawg.io/api/games`, {params:{apiKey: apiKey, ordering: "-rating", dates: "2023-01-01,"+today, page_size:3}})
+    axios.get(`https://api.rawg.io/api/games`, {params:{key: apiKey, ordering: "-rating",  page_size:3}})
         .then((res) => {
             setPopularGames(res.data.results);
             console.log(res.data.results);
@@ -42,7 +50,7 @@ const Home1 = () => {
   }
 
   const getGenres = () => {
-    axios.get(`https://api.rawg.io/api/genres`, {params:{apiKey: apiKey}})
+    axios.get(`https://api.rawg.io/api/genres`, {params:{key: apiKey}})
         .then((res) => {
             setGenres(res.data.results);
             console.log(res.data.results);
@@ -50,7 +58,7 @@ const Home1 = () => {
     );
   }
 
-  useEffect(() => {
+ useEffect(() => {
     getNewGamesList();
     getPopularGames();
     getGenres();
@@ -76,46 +84,47 @@ const Home1 = () => {
         <div className={styles.below}>
           <div className={styles.div}>
             <div className={styles.lineParent}>
-              <div className={styles.frameItem} />
-              <div className={styles.newGames}>New Games</div>
+                <div className={styles.newGames}>New Games</div>
+                <div className={styles.frameItem} />
             </div>
             <div className={styles.cardSpace}>
-              <div className={styles.child} />
+                {newGames.map((game) => (
+                    <Card id={game.id} name={game.name} image_url={game.background_image} platforms={game.platforms} />
+                ))}
               <div className={styles.arrowMore}>
                 <img src="arrow.gif" alt="" className={styles.item} />
                 <div className={styles.txt}>More</div>
               </div>
-              <div className={styles.inner} />
-              {/*{newGames.map((game) => (*/}
-              {/*  <Card id={game.id} name={game.name} image_url={game.background_image} platforms={game.platforms} />*/}
-              {/*))}*/}
-              {/*call card here*/}
-              <div className={styles.child6} />
+
             </div>
           </div>
           <div className={styles.div}>
             <div className={styles.lineParent}>
+                <div className={styles.newGames}>Popular Games</div>
               <div className={styles.frameItem} />
-              <div className={styles.newGames}>Popular Games</div>
             </div>
             <div className={styles.cardSpace}>
-              <div className={styles.child} />
+                {popularGames.map((game) => (
+                    <Card id={game.id} name={game.name} image_url={game.background_image} platforms={game.platforms} />
+                ))}
               <div className={styles.arrowMore}>
                 <img src="arrow.gif" alt="" className={styles.item} />
                 <div className={styles.txt}>More</div>
               </div>
-              <div className={styles.inner} />
-              {/*{popularGames.map((game) => (*/}
-              {/*    <Card id={game.id} name={game.name} image_url={game.background_image} platforms={game.platforms} />*/}
-              {/*))}*/}
-              <div className={styles.child6} />
+
             </div>
           </div>
+
           <div className={styles.div}>
-            <div className={styles.newGamesWrapper}>
-              <div className={styles.frameItem} />
-              <div className={styles.newGames}>Find Your Genre</div>
+            <div className={styles.lineParent}>
+                <div className={styles.newGames}>Find Your Genre</div>
+                <div className={styles.frameItem} />
             </div>
+              <div className={styles.genreWrapper}>
+                  {genres.map((genre, index) => (
+                      <Genre key={index} id={genre.id} name={genre.name} image_url={genre.image_background} />
+                  ))}
+              </div>
           </div>
         </div>
       </div>

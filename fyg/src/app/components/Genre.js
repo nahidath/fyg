@@ -10,3 +10,5 @@ const Genre = ({id, name, image_url }) => {
         </div>
     )
 }
+
+export default Genre;

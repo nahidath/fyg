@@ -9,17 +9,22 @@
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     gap: var(--gap-11xs);
+    width: 8rem;
+}
+
+.genre:hover{
+    transform: scale(1.25);
 }
 
 .imgGenre{
-    width: 5.81rem;
+    width: 7.81rem;
     height: 5.81rem;
     border-radius: var(--br-3xs);
 }
 
 .genreName{
     font-family: var(--oxanium-1-oxanium-main);
-    font-size: var(--oxanium-1-oxanium-main-size);
+    font-size: 1rem;
     color: var(--color-white);
     text-align: center;
     margin: 0;
