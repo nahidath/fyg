@@ -7,9 +7,9 @@ import Card from "@/app/components/Card";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import Genre from "@/app/components/Genre";
 import Modal from "./components/Modal";
-import {FaStar} from "react-icons/fa";
 import PlatformIcon from "@/app/components/PlatformIcon";
 import Carousel from "@/app/components/Carousel";
+import genresList from "./data/genresList";
 
 const Home1 = () => {
   const [newGames, setNewGames] = useState([]);
@@ -26,7 +26,6 @@ const Home1 = () => {
   const closeModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-
 
   const getTodayDate = () => {
     let today = new Date();
@@ -46,52 +45,59 @@ const Home1 = () => {
   const getNewGamesList = () => {
     //get the date of today with format YYYY-MM-DD
 
-    axios.get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
-      params: {'sort-by': 'release-date'}, headers: {
-        'X-RapidAPI-Key': '234848f04emsh06cb063582e79d6p125333jsn4e3e95095409',
-        'X-RapidAPI-Host': 'free-to-play-games-database.p.rapidapi.com'
-      }
-    })
+    axios
+      .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
+        params: { "sort-by": "release-date" },
+        headers: {
+          "X-RapidAPI-Key":
+            "234848f04emsh06cb063582e79d6p125333jsn4e3e95095409",
+          "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
+        },
+      })
       .then((res) => {
         //set only 3 games to be displayed
         setNewGames(res.data.slice(0, 3));
-      }).catch((err) => {
-      console.log(err);
-    });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const getPopularGames = () => {
-    axios.get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
-      params: {'sort-by': 'popularity'}, headers: {
-        'X-RapidAPI-Key': '234848f04emsh06cb063582e79d6p125333jsn4e3e95095409',
-        'X-RapidAPI-Host': 'free-to-play-games-database.p.rapidapi.com'
-      }
-    })
+    axios
+      .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
+        params: { "sort-by": "popularity" },
+        headers: {
+          "X-RapidAPI-Key":
+            "234848f04emsh06cb063582e79d6p125333jsn4e3e95095409",
+          "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
+        },
+      })
       .then((res) => {
         setPopularGames(res.data.slice(0, 3));
-      }).catch((err) => {
-      console.log(err);
-    });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const getGenres = () => {
-    axios.get(`https://api.rawg.io/api/genres`, { params: { key: apiKey } })
+    axios
+      .get(`https://api.rawg.io/api/genres`, { params: { key: apiKey } })
       .then((res) => {
         setGenres(res.data.results);
         console.log(res.data.results);
-      }).catch((err) => {
-      console.log(err);
-    });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
-
-
 
   useEffect(() => {
     getNewGamesList();
     getPopularGames();
     getGenres();
   }, []);
-
 
   return (
     <div className={styles.container}>
@@ -115,10 +121,9 @@ const Home1 = () => {
               <div className={styles.newGames}>New Games</div>
               <div className={styles.frameItem} />
             </div>
-            <div className={styles.cardSpace}
-            >
+            <div className={styles.cardSpace}>
               {newGames.map((game, index) => (
-                  <>
+                <>
                   <Card
                     id={game.id}
                     name={game.title}
@@ -129,14 +134,12 @@ const Home1 = () => {
                     // slug={game.slug}
                   />
                   {/*<Modal isOpen={isModalOpen} onClose={closeModal} screenshots={game.short_screenshots} gameID={game.id} keyIndx={index}/>*/}
-                  </>
-
+                </>
               ))}
               <div className={styles.arrowMore}>
                 <img src="arrow.gif" alt="" className={styles.item} />
                 <div className={styles.txt}>More</div>
               </div>
-
             </div>
           </div>
           <div className={styles.div}>
@@ -147,12 +150,11 @@ const Home1 = () => {
             <div className={styles.cardSpace}>
               {popularGames.map((game, index) => (
                 <Card
-                    id={game.id}
-                    name={game.title}
-                    image_url={game.thumbnail}
-                    platforms={game.platform}
-                    key={index}
-
+                  id={game.id}
+                  name={game.title}
+                  image_url={game.thumbnail}
+                  platforms={game.platform}
+                  key={index}
                 />
               ))}
               <div className={styles.arrowMore}>
@@ -168,12 +170,13 @@ const Home1 = () => {
               <div className={styles.frameItem} />
             </div>
             <div className={styles.genreWrapper}>
-              {genres.map((genre, index) => (
+              {genresList.map((genre, index) => (
                 <Genre
                   key={index}
                   id={genre.id}
                   name={genre.name}
-                  image_url={genre.image_background}
+                  image_url={genre.image}
+                  tagName={genre.tagName}
                 />
               ))}
             </div>
