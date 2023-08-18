@@ -175,7 +175,7 @@ const Home1 = () => {
                   key={index}
                   id={genre.id}
                   name={genre.name}
-                  image_url={genre.image}
+                  image_url={genre.img}
                   tagName={genre.tagName}
                 />
               ))}

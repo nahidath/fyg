@@ -1,6 +1,6 @@
 .card{
-    width: 11.69rem;
-    min-height: 19.06rem;
+    width: 18.69rem;
+    height: 14rem;
     border-radius: var(--br-3xs);
     transition: transform 0.2s;
     cursor: pointer;
@@ -12,12 +12,12 @@
 }
 
 .card:hover{
-    transform: scale(1.05);
+    transform: scale(1.10);
 }
 
 .cardImage{
     width: 100%;
-    min-height: 17rem;
+    min-height: 9rem;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

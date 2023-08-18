@@ -7,6 +7,25 @@ body {
   position: relative;
   min-height: 100vh;
 }
+
+body::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 10px;
+}
+body::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: rgba(254, 254, 254, 0.82);
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 :root {
   /* fonts */
   --oxanium-1-oxanium-main: Oxanium;

@@ -8,12 +8,14 @@ import PlatformIcon from "@/app/components/PlatformIcon";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
+import Requirements from "@/app/components/Requirements";
 
 const Modal = ({ isOpen, onClose, gameID }) => {
   let apiKey = process.env.NEXT_PUBLIC_APP_API_KEY;
   const [game, setGame] = useState([]);
   const [platformName, setPlatformName] = useState([]);
   const [gp, setgp] = useState("");
+  const [gameRequirement, setGameRequirement] = useState([]);
   const getGameDescription = () => {
     axios
       .get(`https://free-to-play-games-database.p.rapidapi.com/api/game`, {
@@ -25,12 +27,10 @@ const Modal = ({ isOpen, onClose, gameID }) => {
         },
       })
       .then((res) => {
-        //find the game with the id
-        // let game = res.data.results.filter(game => game.id === gameID);
-        // setGame(game);
         setGame(res.data);
         setgp(res.data.platform);
-        console.log("gd", game.platform);
+        setGameRequirement(res.data.minimum_system_requirements);
+        // console.log("gd", game.platform);
       })
       .catch((err) => {
         console.log(err);
@@ -79,7 +79,7 @@ const Modal = ({ isOpen, onClose, gameID }) => {
                 ? "No description available"
                 : game.description}
             </div>
-            <div className={styles.requirement}></div>
+            <Requirements requirements={gameRequirement} />
           </div>
           <div className={styles.verticalDivider}></div>
           <div className={styles.gameAdditionalInfo}>

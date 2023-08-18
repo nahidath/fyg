@@ -1,0 +1,36 @@
+.requirement{
+    margin-top: 3rem;
+}
+.requirementTitle{
+    font-size: 1.5rem;
+    color: var(--color-white);
+    font-family: var(--oxanium-1-oxanium-main);
+    font-weight: 700;
+}
+.requirementContent{
+    font-size: 0.9rem;
+    color: var(--color-white);
+    font-family: var(--oxanium-1-oxanium-main);
+    text-wrap: normal;
+}
+.requirementContentTitle{
+    font-size: 1.1rem;
+    color: var(--color-white);
+    font-family: var(--oxanium-1-oxanium-main);
+    font-weight: 400;
+}
+.requirementInfoContent{
+    height: 12rem;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.requirementBlocs{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    width: 36%;
+}

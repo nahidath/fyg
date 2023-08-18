@@ -1,14 +1,7 @@
 const PlatformIcon = ({ platform, size = 24, style }) => {
   const platformIcon = {
-    Windows: "windows.svg",
     "PC (Windows)": "windows.svg",
     "Web Browser": "browser.svg",
-    Playstation: "Playstation.svg",
-    Xbox: "cib_xbox.svg",
-    Nintendo: "Nintendo.png",
-    Android: "Android OS.png",
-    iOS: "Apple_Logo.png",
-    Linux: "linux.png",
   };
 
   const searchString = platform.toLowerCase();
