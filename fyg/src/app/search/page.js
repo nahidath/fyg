@@ -1,7 +1,13 @@
+'use client';
 import stylesH from "@/app/home.module.css";
+import FiltersSideBar from "@/app/components/FiltersSideBar";
+import stylesSP from "../css/searchpage.module.css";
+import {useRouter, usePathname,useSearchParams} from "next/navigation";
 
 
-const page = ({query}) => {
+const page = () => {
+    const searchParams = useSearchParams();
+    const query = searchParams.get("q");
     return (
         <div className={stylesH.container}>
             <div className={stylesH.desktop11}>
@@ -18,15 +24,9 @@ const page = ({query}) => {
                         <input className={stylesH.bgChild2} />
                     </div>
                 </div>
-                <div className={stylesH.below}>
-                    <div className={stylesH.filterSide}>
-                        <div className={stylesH.filterTxt}>Filter</div>
-                        <div className={stylesH.filterTxt}>Genre</div>
-                        <div className={stylesH.filterTxt}>Platform</div>
-                        <div className={stylesH.filterTxt}>Release Date</div>
-                        <div className={stylesH.filterTxt}>Rating</div>
-                    </div>
-                    <div className={styles.searchResults}>
+                <div className={stylesSP.below}>
+                    <FiltersSideBar />
+                    <div className={stylesSP.searchResults}>
                         {/* {searchResults.map((game, index) => (*/}
                         {/*//     <Card*/}
                         {/*//         id={game.id}*/}
@@ -42,3 +42,5 @@ const page = ({query}) => {
         </div>
     )
 }
+
+export default page;

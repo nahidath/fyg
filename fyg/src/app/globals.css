@@ -16,15 +16,16 @@ body::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
 }
+body::-webkit-scrollbar-track:hover {
+  background: rgba(136, 136, 136, 0.5);
+}
+
 
 body::-webkit-scrollbar-thumb {
   background: rgba(254, 254, 254, 0.82);
   border-radius: 10px;
 }
 
-body::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
 
 :root {
   /* fonts */

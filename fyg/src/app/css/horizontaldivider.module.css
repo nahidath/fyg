@@ -1,0 +1,6 @@
+.dividerH{
+    width: 100%;
+    height: 1px;
+    background-color: #ccc; /* Adjust the color to your preference */
+    margin: 10px 0;
+}

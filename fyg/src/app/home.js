@@ -10,15 +10,17 @@ import Modal from "./components/Modal";
 import PlatformIcon from "@/app/components/PlatformIcon";
 import Carousel from "@/app/components/Carousel";
 import genresList from "./data/genresList";
+import { useRouter } from 'next/navigation';
 
 const Home1 = () => {
   const [newGames, setNewGames] = useState([]);
   const [popularGames, setPopularGames] = useState([]);
-  const [genres, setGenres] = useState([]);
   let apiKey = process.env.NEXT_PUBLIC_APP_API_KEY;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [gameID, setGameID] = useState(0);
-  const [gameScreenshots, setGameScreenshots] = useState([]);
+  const router = useRouter();
+  const [inputValue, setInputValue] = useState('');
+
+
   const openModal = () => {
     setIsModalOpen(!isModalOpen);
   };
@@ -27,20 +29,6 @@ const Home1 = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const getTodayDate = () => {
-    let today = new Date();
-    let dd = today.getDate();
-    let mm = today.getMonth() + 1; //January is 0 so need to add 1 to make it 1!
-    let yyyy = today.getFullYear();
-    if (dd < 10) {
-      dd = "0" + dd;
-    }
-    if (mm < 10) {
-      mm = "0" + mm;
-    }
-    today = yyyy + "-" + mm + "-" + dd;
-    return today;
-  };
 
   const getNewGamesList = () => {
     //get the date of today with format YYYY-MM-DD
@@ -81,22 +69,22 @@ const Home1 = () => {
       });
   };
 
-  const getGenres = () => {
-    axios
-      .get(`https://api.rawg.io/api/genres`, { params: { key: apiKey } })
-      .then((res) => {
-        setGenres(res.data.results);
-        console.log(res.data.results);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
+  const search = (e) => {
+    e.preventDefault();
+    //go to search page with the query
+    router.push('/search?q=' + inputValue);
+    console.log(inputValue);
+  }
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
   };
+
 
   useEffect(() => {
     getNewGamesList();
     getPopularGames();
-    getGenres();
   }, []);
 
   return (
@@ -111,8 +99,10 @@ const Home1 = () => {
             Discover and find your future game
           </div>
           <div className={styles.searchInput}>
-            <img className={styles.searchIcon1} alt="" src="Search.png" />
-            <input className={styles.bgChild2} />
+            <form onSubmit={search}>
+              <img className={styles.searchIcon1} alt="" src="Search.png" />
+              <input value={inputValue} onChange={handleInputChange} className={styles.bgChild2} />
+            </form>
           </div>
         </div>
         <div className={styles.below}>

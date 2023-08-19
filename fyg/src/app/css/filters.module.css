@@ -1,0 +1,88 @@
+.filters{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 30%;
+    height: 100%;
+    background-color: var(--color-darkGrey);
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /*position: relative;*/
+    z-index: 1;
+}
+
+.filtersHeader{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    height: 50px;
+    box-sizing: border-box;
+    /*position: relative;*/
+    z-index: 1;
+}
+
+.filtersHeaderTitle{
+    font-size: 1.1rem;
+    color: var(--color-white);
+    font-family: var(--oxanium-1-oxanium-main);
+    font-weight: 600;
+}
+
+.filtersBody{
+    display: flex;
+    flex-direction: column;
+}
+.filtersBodyBlock{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.filtersBlockTitle{
+    font-size: 1.1rem;
+    color: var(--color-white);
+    font-family: var(--oxanium-1-oxanium-main);
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.filtersBlockContent{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.filtersBlockContentItem{
+    margin-left: 5px;
+}
+.filtersBlockContentItem label{
+    font-size: 1rem;
+    color: var(--color-white);
+    font-family: var(--oxanium-1-oxanium-main);
+    font-weight: 600;
+    margin-left: 7px;
+}
+.spec{
+    height: 20rem;
+    overflow: auto;
+}
+
+.spec::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 10px;
+}
+
+.spec::-webkit-scrollbar-track {
+    background: rgba(136, 136, 136, 0);
+    border-radius: 10px;
+
+}
+.spec::-webkit-scrollbar-track:hover {
+    background: rgba(136, 136, 136, 0.5);
+}
+
+.spec::-webkit-scrollbar-thumb {
+    background:#f1f1f1 ;
+    border-radius: 10px;
+}

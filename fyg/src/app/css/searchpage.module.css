@@ -1,0 +1,27 @@
+.below {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-image: url("../../../public/MEMPHIS_BACKGROUND_Mesa_de_trabajo_1.png");
+    background-repeat: initial;
+    background-size: auto;
+    height: 100%;
+    gap: 1rem;
+    padding-bottom: 2.5rem;
+}
+
+.searchResults{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 80%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    /*overflow-y: auto;*/
+    /*overflow-x: hidden;*/
+    /*position: relative;*/
+    z-index: 1;
+}

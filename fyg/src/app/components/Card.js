@@ -20,10 +20,8 @@ const Card = ({ name, id, image_url, platforms }) => {
 
   if (platforms.includes(",")) {
     platformNames = platforms.split(",").map((item) => item.trim());
-    console.log("platformName split", platformNames);
   } else {
     platformNames = [platforms];
-    console.log("platformName no split", platformNames);
   }
 
   return (

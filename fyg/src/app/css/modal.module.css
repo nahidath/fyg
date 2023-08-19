@@ -32,6 +32,11 @@
   border-radius: 10px;
 
 }
+
+.modal::-webkit-scrollbar-track:hover {
+  background: rgba(136, 136, 136, 0.5);
+}
+
 .modal::-webkit-scrollbar-thumb {
   background:#f1f1f1 ;
   border-radius: 10px;
