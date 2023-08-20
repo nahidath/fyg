@@ -17,6 +17,7 @@ const page = () => {
     const query = searchParams.get("q");
     const [inputValue, setInputValue] = useState(query);
     const [searchResults, setSearchResults] = useState([]);
+    const [noResults, setNoResults] = useState("No results found");
 
     // Get a new searchParams string by merging the current
     // searchParams with a provided key/value pair
@@ -84,7 +85,7 @@ const page = () => {
                     </div>
                 </div>
                 <div className={stylesSP.below}>
-                    <FiltersSideBar />
+                    <FiltersSideBar searchQuery={inputValue} setSearchResults={setSearchResults} resultsFromSearchPage={searchResults} setNoResults={setNoResults} />
                     <div className={stylesSP.searchResults}>
                         {searchResults.length > 0 ? searchResults.map((game, index) => (
                             <Card
@@ -94,7 +95,7 @@ const page = () => {
                                 platforms={game.platform}
                                 key={index}
                             />
-                        )) : <div className={stylesSP.noResults}>No results found</div>
+                        )) : <div className={stylesSP.noResults}>{noResults}</div>
                         }
                     </div>
                 </div>

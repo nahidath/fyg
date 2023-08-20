@@ -1,9 +1,13 @@
 'use client';
 import styles from '../css/filters.module.css';
 import HorizontalDivider from "@/app/components/HorizontalDivider";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import axios from "axios";
+import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
+import genresList from "@/app/data/genresList";
 
-const FiltersSideBar = () => {
+const FiltersSideBar = ({searchQuery, setSearchResults, resultsFromSearchPage, setNoResults}) => {
+    let apiKey = process.env.NEXT_PUBLIC_APP_API_KEY;
     const [sort, setSort] = useState("");
     const [platforms, setPlatforms] = useState([]);
     const [genres, setGenres] = useState([]);
@@ -32,11 +36,126 @@ const FiltersSideBar = () => {
           }
     }
 
+    const getGamesByGenre = () => {
+        let getData = [];
+        axios.get(`https://free-to-play-games-database.p.rapidapi.com/api/filter`, {
+            params: {
+                //genre separated by point
+                tag:  genres.length === 1 ? genres[0] : genres.join('.') ,
+               //add platform parameter if there is any
+                platform: platforms.length === 1 ? platforms[0] : "all",
+            },
+            headers: {
+                "X-RapidAPI-Key": apiKey,
+                "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
+            }
+        }).then((res) => {
+            //store the results in getData array to be able to filter them with the resuls from search page
+            getData = res.data;
+            //if there is any results from search page
+            if (resultsFromSearchPage.length > 0) {
+                //filter the results from search page with the results from the filters
+                setSearchResults(resultsFromSearchPage.filter((game) => getData.some((item) => item.id === game.id)));
+            } else {
+                setNoResults("No results found for the selected filters");
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
+    const getGamesBySortBy = () => {
+        let getData = [];
+        axios.get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
+            params: {
+                'sort-by': sort,
+                platform: platforms.length === 1 ? platforms[0] : "all",
+            },
+            headers: {
+                "X-RapidAPI-Key": apiKey,
+                "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
+            }
+        }
+        ).then((res) => {
+            //store the results in getData array to be able to filter them with the resuls from search page
+            getData = res.data;
+            //if there is any results from search page
+            if (resultsFromSearchPage.length > 0) {
+                //filter the results from search page with the results from the filters
+                setSearchResults(resultsFromSearchPage.filter((game) => getData.some((item) => item.id === game.id)));
+            } else {
+                setNoResults("No results found for the selected filters");
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
+    const getGamesByPlatform = () => {
+        let getData = [];
+        axios.get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
+            params: {
+                platform: platforms.length === 1 ? platforms[0] : "all",
+            },
+            headers: {
+                "X-RapidAPI-Key": apiKey,
+                "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
+            }
+        }
+        ).then((res) => {
+            //store the results in getData array to be able to filter them with the resuls from search page
+            getData = res.data;
+            //if there is any results from search page
+            if (resultsFromSearchPage.length > 0) {
+                //filter the results from search page with the results from the filters
+                setSearchResults(resultsFromSearchPage.filter((game) => getData.some((item) => item.id === game.id)));
+            } else {
+                setNoResults("No results found for the selected filters");
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
+
+
+    const handleApplyFilters = (e) => {
+        e.preventDefault();
+        getGamesByGenre();
+    }
+
+    const handleClearFilters = (e) => {
+        e.preventDefault();
+        //clear all the filters
+        setSort("");
+        setPlatforms([]);
+        setGenres([]);
+        //get the games that match like the query
+        getGamesByPlatform();
+    }
+
+
+
+    useEffect(() => {
+        getGamesByGenre();
+    }, [genres]);
+
+    useEffect(() => {
+        getGamesBySortBy();
+    }, [sort]);
+
+    useEffect(() => {
+        getGamesByPlatform();
+    }, [platforms]);
+
 
     return (
         <div className={styles.filters}>
             <div className={styles.filtersHeader}>
                 <h2 className={styles.filtersHeaderTitle}>Filters</h2>
+                <div className={styles.filtersHeaderButtons}>
+                    <button  onClick={handleClearFilters}>Clear</button>
+                </div>
             </div>
             <HorizontalDivider marginTop={0}/>
             <div className={styles.filtersBody}>
@@ -44,19 +163,19 @@ const FiltersSideBar = () => {
                     <h3 className={styles.filtersBlockTitle}>Sort by</h3>
                     <div className={styles.filtersBlockContent}>
                         <div className={styles.filtersBlockContentItem}>
-                            <input type="radio" id="release-date" name="release-date" value="release-date" />
+                            <input type="radio" id="release-date" name="release-date" value="release-date" onChange={handleSortChange} checked={sort==='release-date'} />
                             <label htmlFor="release-date">Release date</label>
                         </div>
                         <div className={styles.filtersBlockContentItem}>
-                            <input type="radio" id="popularity" name="popularity" value="popularity" />
+                            <input type="radio" id="popularity" name="popularity" value="popularity" onChange={handleSortChange} checked={sort==='popularity'} />
                             <label htmlFor="popularity">Popularity</label>
                         </div>
                         <div className={styles.filtersBlockContentItem}>
-                            <input type="radio" id="alphabetical" name="alphabetical" value="alphabetical" />
+                            <input type="radio" id="alphabetical" name="alphabetical" value="alphabetical" onChange={handleSortChange} checked={sort==='alphabetical'} />
                             <label htmlFor="alphabetical">Alphabetical</label>
                         </div>
                         <div className={styles.filtersBlockContentItem}>
-                            <input type="radio" id="relevance" name="relevance" value="relevance" />
+                            <input type="radio" id="relevance" name="relevance" value="relevance" onChange={handleSortChange} checked={sort==='relevance'} />
                             <label htmlFor="relevance">Relevance</label>
                         </div>
                     </div>
@@ -65,11 +184,11 @@ const FiltersSideBar = () => {
                     <h3 className={styles.filtersBlockTitle}>Platform</h3>
                     <div className={styles.filtersBlockContent}>
                         <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="pc" name="pc" value="pc" />
+                            <input type="checkbox" id="pc" name="pc" value="pc" onChange={handlePlatformChange} checked={platforms.includes('pc')} />
                             <label for="pc">PC</label>
                         </div>
                         <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="browser" name="browser" value="browser" />
+                            <input type="checkbox" id="browser" name="browser" value="browser" onChange={handlePlatformChange} checked={platforms.includes("browser")}/>
                             <label for="browser">Browser</label>
                         </div>
                     </div>
@@ -77,134 +196,13 @@ const FiltersSideBar = () => {
                 <div className={styles.filtersBodyBlock}>
                     <h3 className={styles.filtersBlockTitle}>Genre</h3>
                     <div className={`${styles.filtersBlockContent} ${styles.spec}`}>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="action" name="action" value="action" />
-                            <label for="action">Action</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="mmorpg" name="mmorpg" value="mmorpg" />
-                            <label for="mmorpg">MMORPG</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="shooter" name="shooter" value="shooter" />
-                            <label for="shooter">Shooter</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="strategy" name="strategy" value="strategy" />
-                            <label for="strategy">Strategy</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="moba" name="moba" value="moba" />
-                            <label for="moba">MOBA</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="racing" name="racing" value="racing" />
-                            <label for="racing">Racing</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="sports" name="sports" value="sports" />
-                            <label for="sports">Sports</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="social" name="social" value="social" />
-                            <label for="social">Social</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="sandbox" name="sandbox" value="sandbox" />
-                            <label for="sandbox">Sandbox</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="open-world" name="open-world" value="open-world" />
-                            <label for="open-world">Open World</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="survival" name="survival" value="survival" />
-                            <label for="survival">Survival</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="pvp" name="pvp" value="pvp" />
-                            <label for="pvp">PvP</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="pve" name="pve" value="pve" />
-                            <label for="pve">PvE</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="pixel" name="pixel" value="pixel" />
-                            <label for="pixel">Pixel</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="voxel" name="voxel" value="voxel" />
-                            <label for="voxel">Voxel</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="zombie" name="zombie" value="zombie" />
-                            <label for="zombie">Zombie</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="turn-based" name="turn-based" value="turn-based" />
-                            <label for="turn-based">Turn Based</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="first-person" name="first-person" value="first-person" />
-                            <label for="first-person">First Person</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="third-Person" name="third-person" value="third-person" />
-                            <label for="third-person">Third Person</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="top-down" name="top-down" value="top-down" />
-                            <label for="top-down">Top Down</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="tank" name="tank" value="tank" />
-                            <label for="tank">Tank</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="space" name="space" value="space" />
-                            <label for="space">Space</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="sailing" name="sailing" value="sailing" />
-                            <label for="sailing">Sailing</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="side-scroller" name="side-scroller" value="side-scroller" />
-                            <label for="side-scroller">Side Scroller</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="superhero" name="superhero" value="superhero" />
-                            <label for="superhero">Superhero</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="permadeath" name="permadeath" value="permadeath" />
-                            <label for="permadeath">Permadeath</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="card" name="card" value="card" />
-                            <label for="card">Card</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="battle-royale" name="battle-royale" value="battle-royale" />
-                            <label for="battle-royale">Battle Royale</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="mmo" name="mmo" value="mmo" />
-                            <label for="mmo">MMO</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="mmofps" name="mmofps" value="mmofps" />
-                            <label for="mmofps">MMOFPS</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="mmotps" name="mmotps" value="mmotps" />
-                            <label for="mmotps">MMOTPS</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="3d" name="3d" value="3d" />
-                            <label for="3d">3D</label>
-                        </div>
+                        {genresList.map((genre, index) => (
+                            <div className={styles.filtersBlockContentItem}>
+                                <input type="checkbox" id={genre.tagName} name={genre.tagName} value={genre.tagName} onChange={handleGenreChange} checked={genres.includes(genre.tagName)}/>
+                                <label htmlFor={genre.tagName}>{genre.name}</label>
+                            </div>
+                        ))}
+
                     </div>
 
                 </div>
