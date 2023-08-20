@@ -2,6 +2,7 @@
     width: 700px;
     height: 300px;
     margin: 0 auto;
+    border-radius: var(--br-3xs);
 }
 
 .imgCarousel{

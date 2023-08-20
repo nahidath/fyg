@@ -38,7 +38,7 @@ const Home1 = () => {
         params: { "sort-by": "release-date" },
         headers: {
           "X-RapidAPI-Key":
-            "234848f04emsh06cb063582e79d6p125333jsn4e3e95095409",
+            apiKey,
           "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
         },
       })
@@ -57,7 +57,7 @@ const Home1 = () => {
         params: { "sort-by": "popularity" },
         headers: {
           "X-RapidAPI-Key":
-            "234848f04emsh06cb063582e79d6p125333jsn4e3e95095409",
+            apiKey,
           "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
         },
       })

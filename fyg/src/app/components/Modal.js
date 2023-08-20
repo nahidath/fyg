@@ -59,7 +59,7 @@ const Modal = ({ isOpen, onClose, gameID }) => {
           className={styles.closeButton}
           onClick={onClose}
           color={"#fff"}
-          size={25}
+          size={30}
         />
         {/*{game.map((game, index) => (*/}
         {/*    <>*/}

@@ -1,7 +1,38 @@
+'use client';
 import styles from '../css/filters.module.css';
 import HorizontalDivider from "@/app/components/HorizontalDivider";
+import {useState} from "react";
 
 const FiltersSideBar = () => {
+    const [sort, setSort] = useState("");
+    const [platforms, setPlatforms] = useState([]);
+    const [genres, setGenres] = useState([]);
+
+    const handleSortChange = (e) => {
+        setSort(e.target.value);
+    }
+
+    const handlePlatformChange = (e) => {
+        //push the value to the array
+          if (e.target.checked) {
+                setPlatforms([...platforms, e.target.value]);
+          } else {
+                //remove the value from the array
+                setPlatforms(platforms.filter((item) => item !== e.target.value));
+          }
+    }
+
+    const handleGenreChange = (e) => {
+        //push the value to the array
+          if (e.target.checked) {
+                setGenres([...genres, e.target.value]);
+          } else {
+                //remove the value from the array
+                setGenres(genres.filter((item) => item !== e.target.value));
+          }
+    }
+
+
     return (
         <div className={styles.filters}>
             <div className={styles.filtersHeader}>
@@ -9,6 +40,27 @@ const FiltersSideBar = () => {
             </div>
             <HorizontalDivider marginTop={0}/>
             <div className={styles.filtersBody}>
+                <div className={styles.filtersBodyBlock}>
+                    <h3 className={styles.filtersBlockTitle}>Sort by</h3>
+                    <div className={styles.filtersBlockContent}>
+                        <div className={styles.filtersBlockContentItem}>
+                            <input type="radio" id="release-date" name="release-date" value="release-date" />
+                            <label htmlFor="release-date">Release date</label>
+                        </div>
+                        <div className={styles.filtersBlockContentItem}>
+                            <input type="radio" id="popularity" name="popularity" value="popularity" />
+                            <label htmlFor="popularity">Popularity</label>
+                        </div>
+                        <div className={styles.filtersBlockContentItem}>
+                            <input type="radio" id="alphabetical" name="alphabetical" value="alphabetical" />
+                            <label htmlFor="alphabetical">Alphabetical</label>
+                        </div>
+                        <div className={styles.filtersBlockContentItem}>
+                            <input type="radio" id="relevance" name="relevance" value="relevance" />
+                            <label htmlFor="relevance">Relevance</label>
+                        </div>
+                    </div>
+                </div>
                 <div className={styles.filtersBodyBlock}>
                     <h3 className={styles.filtersBlockTitle}>Platform</h3>
                     <div className={styles.filtersBlockContent}>
@@ -155,27 +207,6 @@ const FiltersSideBar = () => {
                         </div>
                     </div>
 
-                </div>
-                <div className={styles.filtersBodyBlock}>
-                    <h3 className={styles.filtersBlockTitle}>Sort by</h3>
-                    <div className={styles.filtersBlockContent}>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="popularity" name="popularity" value="popularity" />
-                            <label for="popularity">Popularity</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="release-date" name="release-date" value="release-date" />
-                            <label for="release-date">Release Date</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="alphabetical" name="alphabetical" value="alphabetical" />
-                            <label for="alphabetical">Alphabetical</label>
-                        </div>
-                        <div className={styles.filtersBlockContentItem}>
-                            <input type="checkbox" id="relevance" name="relevance" value="relevance" />
-                            <label for="relevance">Relevance</label>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
