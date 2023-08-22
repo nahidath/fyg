@@ -38,6 +38,7 @@ const Card = ({ name, id, image_url, platforms }) => {
               platform={p}
               size={20}
               style={{ marginRight: 4 }}
+              key={index}
             />
             ))}
             

@@ -24,29 +24,43 @@ const FiltersSideBar = ({
   };
 
   const handlePlatformChange = (e) => {
+    const selectedP = e.target.value;
+    let updatedPlatforms;
     //push the value to the array
     if (e.target.checked) {
-      setPlatforms([...platforms, e.target.value]);
+      updatedPlatforms=[...platforms, selectedP];
     } else {
       //remove the value from the array
-      setPlatforms(platforms.filter((item) => item !== e.target.value));
+      updatedPlatforms=platforms.filter((item) => item !== selectedP);
     }
-    getGamesByPlatform(platforms);
+
+    setPlatforms(updatedPlatforms);
+
+    // Call getGamesByPlatform if only one platform is selected
+    if (updatedPlatforms.length >= 1) {
+        console.log("platform selected")
+      getGamesByPlatform(updatedPlatforms);
+    }
+
+    // Call getGamesByPlatform if one platform is unselected
+    if (updatedPlatforms.length === 1) {
+        console.log("platform unselected")
+      getGamesByPlatform(updatedPlatforms);
+    }
+
+    // Call refreshSearchResults if all platforms are unselected
+    if (updatedPlatforms.length === 0) {
+        console.log("platform unselected")
+      refreshSearchResults();
+    }
+
+
   };
 
   const handleGenreChange = (e) => {
     //push the value to the array
-    //let selectedG = [];
     const selectedG = e.target.value;
     let updatedGenres;
-    // if (e.target.checked) {
-    //   setGenres([...genres, e.target.value]);
-    //   selectedG.push(e.target.value);
-    // } else {
-    //   //remove the value from the array
-    //   setGenres(genres.filter((item) => item !== e.target.value));
-    //   selectedG.filter((item) => item !== e.target.value);
-    // }
     if (e.target.checked) {
         updatedGenres = [...genres, selectedG];
     } else {
@@ -54,10 +68,18 @@ const FiltersSideBar = ({
     }
 
     setGenres(updatedGenres)
+    console.log("updated genres length", updatedGenres.length);
 
     // Call getGameByGenre if only one genre is selected
     if (updatedGenres.length >= 1) {
         console.log("genre selected")
+      getGamesByGenre(updatedGenres);
+    }
+
+
+    // Call getGameByGenre if one genre is unselected
+    if (updatedGenres.length === 1) {
+        console.log("genre unselected")
       getGamesByGenre(updatedGenres);
     }
 
@@ -67,39 +89,6 @@ const FiltersSideBar = ({
       refreshSearchResults();
     }
 
-    // setGenres((prevState) => {
-    //   if (e.target.checked) {
-    //     return [...prevState, selectedG];
-    //   } else {
-    //     return prevState.filter((genre) => genre !== selectedG);
-    //   }
-    // });
-    // setGenres((prevState) => {
-    //     if (e.target.checked) {
-    //         if (prevState.length === 1) {
-    //             console.log("genre selected")
-    //             getGamesByGenre(selectedG);
-    //           }
-    //       return [...prevState, selectedG];
-    //     } else {
-    //         if (prevState.length === 0) {
-    //             console.log("genre unselected")
-    //             refreshSearchResults();
-    //           }
-    //       return prevState.filter((genre) => genre !== selectedG);
-    //     }
-    //   })
-
-    // // Call the function here to update the filtered games
-    // if (genres.length === 0) {
-    //   // If only one genre was unselected, fetch all games
-    //   console.log("unselected genre");
-    //   refreshSearchResults();
-    // } else {
-    //   // Fetch games based on the remaining selected genres
-    //   console.log("games selected");
-    //   getGamesByGenre(genres);
-    // }
   };
 
   const getGamesByGenre = (genres) => {
@@ -131,6 +120,8 @@ const FiltersSideBar = ({
               getData.some((item) => item.id === game.id)
             )
           );
+          console.log("search results", resultsFromSearchPage.filter((game) =>
+              getData.some((item) => item.id === game.id)));
         } else if (res.data.length === 0) {
           setNoResults("No results found for the selected filters");
         }
