@@ -5,22 +5,38 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import genresList from "@/app/data/genresList";
+import {useSearchParams} from "next/navigation";
 
 const FiltersSideBar = ({
-  searchQuery,
   setSearchResults,
-  resultsFromSearchPage,
   setNoResults,
   refreshSearchResults,
 }) => {
   let apiKey = process.env.NEXT_PUBLIC_APP_API_KEY;
-  const [sort, setSort] = useState("");
+  const [sort, setSort] = useState("relevance");
   const [platforms, setPlatforms] = useState([]);
   const [genres, setGenres] = useState([]);
+  const searchParams = useSearchParams();
+  const query = searchParams.get("q");
+
 
   const handleSortChange = (e) => {
-    setSort(e.target.value);
-    getGamesBySortBy(sort);
+    const selectedS = e.target.value;
+    let updatedSort;
+    if (e.target.checked) {
+        updatedSort = selectedS;
+    } else {
+        updatedSort = "";
+    }
+    setSort(updatedSort);
+
+    // Call getGamesBySortBy if only one sort is selected
+    if (updatedSort !== "") {
+        getGamesBySortBy(updatedSort);
+    } else {
+        refreshSearchResults();
+    }
+    // getGamesBySortBy(sort);
   };
 
   const handlePlatformChange = (e) => {
@@ -43,7 +59,7 @@ const FiltersSideBar = ({
     }
 
     // Call getGamesByPlatform if one platform is unselected
-    if (updatedPlatforms.length === 1) {
+    if (updatedPlatforms.length <= 1) {
         console.log("platform unselected")
       getGamesByPlatform(updatedPlatforms);
     }
@@ -66,151 +82,144 @@ const FiltersSideBar = ({
     } else {
         updatedGenres = genres.filter((genre) => genre !== selectedG);
     }
-
     setGenres(updatedGenres)
-    console.log("updated genres length", updatedGenres.length);
 
     // Call getGameByGenre if only one genre is selected
     if (updatedGenres.length >= 1) {
-        console.log("genre selected")
       getGamesByGenre(updatedGenres);
     }
 
-
     // Call getGameByGenre if one genre is unselected
-    if (updatedGenres.length === 1) {
-        console.log("genre unselected")
+    if (updatedGenres.length <= 1) {
       getGamesByGenre(updatedGenres);
     }
 
     // Call refreshSearchResults if all genres are unselected
     if (updatedGenres.length === 0) {
-        console.log("genres unselected")
       refreshSearchResults();
     }
 
   };
 
   const getGamesByGenre = (genres) => {
-    console.log("genres", genres);
     let getData = [];
-    // if(genres.length > 0){
-    console.log("inside if");
-    axios
-      .get(`https://free-to-play-games-database.p.rapidapi.com/api/filter`, {
-        params: {
-          //genre separated by point
-          tag: genres.length === 1 ? genres[0] : genres.join("."),
-          //add platform parameter if there is any
-          platform: platforms.length === 1 ? platforms[0] : "all",
-        },
-        headers: {
-          "X-RapidAPI-Key": apiKey,
-          "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
-        },
-      })
-      .then((res) => {
-        //store the results in getData array to be able to filter them with the resuls from search page
-        getData = res.data;
-        //if there is any results from search page
-        if (resultsFromSearchPage.length > 0) {
-          //filter the results from search page with the results from the filters
-          setSearchResults(
-            resultsFromSearchPage.filter((game) =>
-              getData.some((item) => item.id === game.id)
-            )
+    let resultsBefore = [];
+    if(genres.length > 0){
+      axios
+        .get(`https://free-to-play-games-database.p.rapidapi.com/api/filter`, {
+          params: {
+            //genre separated by point
+            tag: genres.length === 1 ? genres[0] : genres.join("."),
+            //add platform parameter if there is any
+            platform: platforms.length === 1 ? platforms[0] : "all",
+          },
+          headers: {
+            "X-RapidAPI-Key": apiKey,
+            "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
+          },
+        })
+        .then((res) => {
+          //store the results in getData array to be able to filter them with the results from search page
+          getData = res.data;
+          //filter the results from filters that include the query and match the genres
+          resultsBefore = getData.filter((game) =>
+            game.title.toLowerCase().includes(query.toLowerCase())
           );
-          console.log("search results", resultsFromSearchPage.filter((game) =>
-              getData.some((item) => item.id === game.id)));
-        } else if (res.data.length === 0) {
-          setNoResults("No results found for the selected filters");
-        }
-      })
-      .catch((err) => {
-        setSearchResults(resultsFromSearchPage);
-        console.log("poic");
-        console.log(err);
-      });
-    // }else{
-    //     setSearchResults(resultsFromSearchPage);
-    // }
+
+          //if there is no results from filters
+          if (resultsBefore.length === 0) {
+              setNoResults("No results found for the selected filters");
+          } else {
+              setSearchResults(resultsBefore);
+          }
+
+        })
+        .catch((err) => {
+          refreshSearchResults();
+          console.log(err);
+        });
+    }else{
+        refreshSearchResults();
+    }
   };
 
   const getGamesBySortBy = (sort) => {
     let getData = [];
-    axios
-      .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
-        params: {
-          "sort-by": sort,
-          platform: platforms.length === 1 ? platforms[0] : "all",
-        },
-        headers: {
-          "X-RapidAPI-Key": apiKey,
-          "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
-        },
-      })
-      .then(
-        (res) => {
-          //store the results in getData array to be able to filter them with the resuls from search page
-          getData = res.data;
-          //if there is any results from search page
-          if (resultsFromSearchPage.length > 0) {
-            //filter the results from search page with the results from the filters
-            setSearchResults(
-              resultsFromSearchPage.filter((game) =>
-                getData.some((item) => item.id === game.id)
-              )
-            );
-          } else if (res.data.length === 0) {
-            setNoResults("No results found for the selected filters");
-          }
-        },
-        (error) => {
-          setSearchResults(resultsFromSearchPage);
-        }
-      )
-      .catch((err) => {
-        console.log(err);
-      });
+    let resultsBefore = [];
+    if(sort !== ""){
+      axios
+        .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
+          params: {
+            "sort-by": sort,
+            platform: platforms.length === 1 ? platforms[0] : "all",
+          },
+          headers: {
+            "X-RapidAPI-Key": apiKey,
+            "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
+          },
+        })
+        .then(
+          (res) => {
+            //store the results in getData array to be able to filter them with the resuls from search page
+            getData = res.data;
+              //filter the results from filters that include the query and match the sort
+              resultsBefore = getData.filter((game) =>
+                  game.title.toLowerCase().includes(query.toLowerCase())
+              );
+
+              //if there is no results from filters
+              if (resultsBefore.length === 0) {
+                  setNoResults("No results found for the selected filters");
+              } else {
+                  setSearchResults(resultsBefore);
+              }
+          })
+        .catch((err) => {
+          console.log(err);
+        });
+    }else{
+        refreshSearchResults();
+    }
   };
 
   const getGamesByPlatform = (platforms) => {
-    console.log(resultsFromSearchPage);
-    // console.log(platforms)
+    let resultsBefore = [];
     let getData = [];
-    axios
-      .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
-        params: {
-          platform: platforms.length === 1 ? platforms[0] : "all",
-        },
-        headers: {
-          "X-RapidAPI-Key": apiKey,
-          "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
-        },
-      })
-      .then(
-        (res) => {
-          //store the results in getData array to be able to filter them with the resuls from search page
-          getData = res.data;
-          //if there is any results from search page
-          if (resultsFromSearchPage.length > 0) {
-            //filter the results from search page with the results from the filters
-            setSearchResults(
-              resultsFromSearchPage.filter((game) =>
-                getData.some((item) => item.id === game.id)
-              )
-            );
-          } else if (res.data.length === 0) {
-            setNoResults("No results found for the selected filters");
+    if(platforms.length > 0){
+      axios
+        .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
+          params: {
+            platform: platforms.length === 1 ? platforms[0] : "all",
+          },
+          headers: {
+            "X-RapidAPI-Key": apiKey,
+            "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
+          },
+        })
+        .then(
+          (res) => {
+            //store the results in getData array to be able to filter them with the resuls from search page
+            getData = res.data;
+            //filter the results from filters that include the query and match the platforms
+              resultsBefore = getData.filter((game) =>
+                  game.title.toLowerCase().includes(query.toLowerCase())
+              );
+
+              //if there is no results from filters
+              if (resultsBefore.length === 0) {
+                  setNoResults("No results found for the selected filters");
+              } else {
+                  setSearchResults(resultsBefore);
+              }
+
           }
-        },
-        (error) => {
-          setSearchResults(resultsFromSearchPage);
-        }
-      )
-      .catch((err) => {
-        console.log(err);
-      });
+        )
+        .catch((err) => {
+          console.log(err);
+        });
+    }else{
+        refreshSearchResults();
+    }
   };
 
   const handleApplyFilters = (e) => {
@@ -225,20 +234,9 @@ const FiltersSideBar = ({
     setPlatforms([]);
     setGenres([]);
     //get the games that match like the query
-    setSearchResults(resultsFromSearchPage);
+    refreshSearchResults();
   };
 
-  // useEffect(() => {
-  //     getGamesByGenre();
-  // }, [genres]);
-
-  // useEffect(() => {
-  //     getGamesBySortBy();
-  // }, [sort]);
-
-  // useEffect(() => {
-  //     getGamesByPlatform();
-  // }, [platforms]);
 
   return (
     <div className={styles.filters}>
@@ -311,7 +309,7 @@ const FiltersSideBar = ({
                 onChange={handlePlatformChange}
                 checked={platforms.includes("pc")}
               />
-              <label for="pc">PC</label>
+              <label htmlFor="pc">PC</label>
             </div>
             <div className={styles.filtersBlockContentItem}>
               <input
@@ -322,7 +320,7 @@ const FiltersSideBar = ({
                 onChange={handlePlatformChange}
                 checked={platforms.includes("browser")}
               />
-              <label for="browser">Browser</label>
+              <label htmlFor="browser">Browser</label>
             </div>
           </div>
         </div>

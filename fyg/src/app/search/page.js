@@ -85,7 +85,7 @@ const page = () => {
                     </div>
                 </div>
                 <div className={stylesSP.below}>
-                    <FiltersSideBar searchQuery={inputValue} setSearchResults={setSearchResults} resultsFromSearchPage={searchResults} setNoResults={setNoResults} refreshSearchResults={getSearchResults} />
+                    <FiltersSideBar setSearchResults={setSearchResults} setNoResults={setNoResults} refreshSearchResults={getSearchResults} />
                     <div className={stylesSP.searchResults}>
                         {searchResults.length > 0 ? searchResults.map((game, index) => (
                             <Card
