@@ -7,6 +7,8 @@ import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/post
 import axios from "axios";
 import {useCallback, useEffect, useState} from "react";
 import Card from "@/app/components/Card";
+import Loading from "@/app/components/Loading";
+import genreList from "@/app/data/genresList";
 
 
 const page = () => {
@@ -15,9 +17,12 @@ const page = () => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const query = searchParams.get("q");
+    let genreQuery = searchParams.get("genre");
+    console.log(genreQuery);
     const [inputValue, setInputValue] = useState(query);
     const [searchResults, setSearchResults] = useState([]);
     const [noResults, setNoResults] = useState("No results found");
+    const [isLoading, setIsLoading] = useState(false);
 
     // Get a new searchParams string by merging the current
     // searchParams with a provided key/value pair
@@ -34,39 +39,67 @@ const page = () => {
     const search = (e) => {
         e.preventDefault();
         //go to search page with the query
-        router.push(pathname + '?' + createQueryString('q', inputValue));
-    }
+        router.replace(pathname + '?q=' + inputValue);
+        genreQuery="";
+    };
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
     };
 
-    const getSearchResults = () => {
-        axios
-            .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
-                params: { "sort-by": "relevance" },
-                headers: {
-                    "X-RapidAPI-Key": apiKey,
-                    "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
-                },
-            })
-            .then((res) => {
-                //get games that match like the query
-                setSearchResults(res.data.filter((game) => game.title.toLowerCase().includes(query.toLowerCase())));
-                //clear the input
-                setInputValue('');
 
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+
+    const getSearchResults = () => {
+        if(genreQuery){
+            //if there is a genre query, get the games that match the genre
+            axios
+                .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
+                    params: { "sort-by": "relevance", category: genreQuery },
+                    headers: {
+                        "X-RapidAPI-Key": apiKey,
+                        "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
+                    },
+                })
+                .then((res) => {
+                    setSearchResults(res.data);
+                    setIsLoading(false);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+        else{
+            axios
+                .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
+                    params: { "sort-by": "relevance" },
+                    headers: {
+                        "X-RapidAPI-Key": apiKey,
+                        "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
+                    },
+                })
+                .then((res) => {
+                    //get games that match like the query
+                    setSearchResults(res.data.filter((game) => game.title.toLowerCase().includes(query.toLowerCase())));
+                    setIsLoading(false);
+                    //clear the input
+                    setInputValue('');
+
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+
     }
 
     useEffect(() => {
+        setIsLoading(true);
         getSearchResults();
     }, [query]);
 
 
     return (
+        <>
+        {isLoading && <Loading />}
         <div className={stylesH.container}>
             <div className={stylesH.desktop11}>
                 <div className={stylesH.headerimg}>
@@ -75,7 +108,7 @@ const page = () => {
                 </div>
                 <div className={stylesH.headerTxt}>
                     <div className={stylesH.discoverAndFind1}>
-                        Search for "{query}"
+                        {genreQuery ? genreList.find((genre) => genre.tagName === genreQuery).name + " Games" : query && "Search results for " + '"'+ query+ '"'}
                     </div>
                     <div className={stylesH.searchInput}>
                         <form onSubmit={search}>
@@ -85,7 +118,7 @@ const page = () => {
                     </div>
                 </div>
                 <div className={stylesSP.below}>
-                    <FiltersSideBar setSearchResults={setSearchResults} setNoResults={setNoResults} refreshSearchResults={getSearchResults} />
+                    <FiltersSideBar setSearchResults={setSearchResults} setNoResults={setNoResults} refreshSearchResults={getSearchResults} setLoading={setIsLoading} genreQuery={genreQuery} />
                     <div className={stylesSP.searchResults}>
                         {searchResults.length > 0 ? searchResults.map((game, index) => (
                             <Card
@@ -101,6 +134,7 @@ const page = () => {
                 </div>
             </div>
         </div>
+        </>
     )
 }
 

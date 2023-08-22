@@ -11,13 +11,18 @@ const FiltersSideBar = ({
   setSearchResults,
   setNoResults,
   refreshSearchResults,
+    setLoading,
+    // genreQuery
 }) => {
   let apiKey = process.env.NEXT_PUBLIC_APP_API_KEY;
   const [sort, setSort] = useState("relevance");
   const [platforms, setPlatforms] = useState([]);
-  const [genres, setGenres] = useState([]);
+
+  // const [genres, setGenres] = useState([]);
   const searchParams = useSearchParams();
   const query = searchParams.get("q");
+  const genreQuery = searchParams.get("genre");
+  const [genres, setGenres] = genreQuery ? useState([genreQuery]) : query && useState([]);
 
 
   const handleSortChange = (e) => {
@@ -54,19 +59,16 @@ const FiltersSideBar = ({
 
     // Call getGamesByPlatform if only one platform is selected
     if (updatedPlatforms.length >= 1) {
-        console.log("platform selected")
       getGamesByPlatform(updatedPlatforms);
     }
 
     // Call getGamesByPlatform if one platform is unselected
     if (updatedPlatforms.length <= 1) {
-        console.log("platform unselected")
       getGamesByPlatform(updatedPlatforms);
     }
 
     // Call refreshSearchResults if all platforms are unselected
     if (updatedPlatforms.length === 0) {
-        console.log("platform unselected")
       refreshSearchResults();
     }
 
@@ -91,11 +93,14 @@ const FiltersSideBar = ({
 
     // Call getGameByGenre if one genre is unselected
     if (updatedGenres.length <= 1) {
+      console.log("<=1");
+      console.log(updatedGenres);
       getGamesByGenre(updatedGenres);
     }
 
     // Call refreshSearchResults if all genres are unselected
     if (updatedGenres.length === 0) {
+      console.log("==0");
       refreshSearchResults();
     }
 
@@ -128,18 +133,20 @@ const FiltersSideBar = ({
 
           //if there is no results from filters
           if (resultsBefore.length === 0) {
+            setLoading(false);
               setNoResults("No results found for the selected filters");
           } else {
+                setLoading(false);
               setSearchResults(resultsBefore);
           }
 
         })
         .catch((err) => {
-          refreshSearchResults();
           console.log(err);
         });
     }else{
         refreshSearchResults();
+        setLoading(false);
     }
   };
 
@@ -162,15 +169,17 @@ const FiltersSideBar = ({
           (res) => {
             //store the results in getData array to be able to filter them with the resuls from search page
             getData = res.data;
-              //filter the results from filters that include the query and match the sort
-              resultsBefore = getData.filter((game) =>
+              //filter the results from filters that include the query and match the sort or match the genreQuery
+              resultsBefore = query ? getData.filter((game) =>
                   game.title.toLowerCase().includes(query.toLowerCase())
-              );
+              ) : getData.filter((game) => game.genre.toLowerCase() === genreQuery.toLowerCase());
 
               //if there is no results from filters
               if (resultsBefore.length === 0) {
+                setLoading(false);
                   setNoResults("No results found for the selected filters");
               } else {
+                    setLoading(false);
                   setSearchResults(resultsBefore);
               }
           })
@@ -179,6 +188,7 @@ const FiltersSideBar = ({
         });
     }else{
         refreshSearchResults();
+        setLoading(false);
     }
   };
 
@@ -201,14 +211,16 @@ const FiltersSideBar = ({
             //store the results in getData array to be able to filter them with the resuls from search page
             getData = res.data;
             //filter the results from filters that include the query and match the platforms
-              resultsBefore = getData.filter((game) =>
+              resultsBefore = query ? getData.filter((game) =>
                   game.title.toLowerCase().includes(query.toLowerCase())
-              );
+              ) : getData.filter((game) => game.genre.toLowerCase() === genreQuery.toLowerCase());
 
               //if there is no results from filters
               if (resultsBefore.length === 0) {
+                setLoading(false);
                   setNoResults("No results found for the selected filters");
               } else {
+                    setLoading(false);
                   setSearchResults(resultsBefore);
               }
 
@@ -219,6 +231,7 @@ const FiltersSideBar = ({
         });
     }else{
         refreshSearchResults();
+        setLoading(false);
     }
   };
 
@@ -235,6 +248,7 @@ const FiltersSideBar = ({
     setGenres([]);
     //get the games that match like the query
     refreshSearchResults();
+    setLoading(false);
   };
 
 
@@ -324,24 +338,27 @@ const FiltersSideBar = ({
             </div>
           </div>
         </div>
-        <div className={styles.filtersBodyBlock}>
-          <h3 className={styles.filtersBlockTitle}>Genre</h3>
-          <div className={`${styles.filtersBlockContent} ${styles.spec}`}>
-            {genresList.map((genre, index) => (
-              <div className={styles.filtersBlockContentItem}>
-                <input
-                  type="checkbox"
-                  id={genre.tagName}
-                  name={genre.tagName}
-                  value={genre.tagName}
-                  onChange={handleGenreChange}
-                  checked={genres.includes(genre.tagName)}
-                />
-                <label htmlFor={genre.tagName}>{genre.name}</label>
+        {!genreQuery && (
+            <div className={styles.filtersBodyBlock}>
+              <h3 className={styles.filtersBlockTitle}>Genre</h3>
+              <div className={`${styles.filtersBlockContent} ${styles.spec}`}>
+                {genresList.map((genre, index) => (
+                    <div className={styles.filtersBlockContentItem} key={index}>
+                      <input
+                          type="checkbox"
+                          id={genre.tagName}
+                          name={genre.tagName}
+                          value={genre.tagName}
+                          onChange={handleGenreChange}
+                          checked={genres.includes(genre.tagName)}
+                      />
+                      <label htmlFor={genre.tagName}>{genre.name}</label>
+                    </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+        )}
+
       </div>
     </div>
   );

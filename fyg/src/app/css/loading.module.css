@@ -19,11 +19,9 @@
 }
 
 .loadingIcon{
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 5px solid var(--color-white);
-    border-top-color: var(--color-darkGrey);
-    animation: loading 1s infinite linear;
+    width: 20rem;
+    height: 20rem;
+
+
 }
 
