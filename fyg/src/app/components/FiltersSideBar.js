@@ -25,16 +25,18 @@ const FiltersSideBar = ({
     ? useState(sortQuery)
     : useState("relevance");
   const [platforms, setPlatforms] = useState([]);
-  console.log(sort)
+  console.log("sort",sort)
+  console.log("sortQuery",sortQuery)
 
   useEffect(() => {
     setGenres([]);
   }, [genreQuery == null]);
-  // useEffect(() => {
-  //   setSort("")
-  // }, [sortQuery == null]);
+  useEffect(() => {
+    if(sortQuery===null) setSort("relevance")
+  }, [sortQuery]);
 
   const handleSortChange = (e) => {
+    console.log("handleSortChange")
     const selectedS = e.target.value;
     let updatedSort;
     if (e.target.checked) {

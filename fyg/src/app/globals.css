@@ -26,6 +26,13 @@ body::-webkit-scrollbar-thumb {
   border-radius: 10px;
 }
 
+.global {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 76vh;
+}
+
 
 :root {
   /* fonts */

@@ -20,9 +20,9 @@ const Navbar = () => {
           Login |
         </Link>
 
-        <a href="#" className={styles.login}>
+        <Link href="/register" className={styles.login}>
           Register
-        </a>
+        </Link>
       </div>
     </div>
   );

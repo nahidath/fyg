@@ -9,6 +9,9 @@ import {useCallback, useEffect, useState} from "react";
 import Card from "@/app/components/Card";
 import Loading from "@/app/components/Loading";
 import genreList from "@/app/data/genresList";
+import popularGamesMock from "@/app/data/popularGamesMock";
+import newGamesMock from "@/app/data/newGamesMock";
+import ScrollToTopButton from "@/app/components/ScrollTopButton";
 
 
 const page = () => {
@@ -64,6 +67,9 @@ const page = () => {
                 })
                 .then((res) => {
                     setSearchResults(res.data);
+                    setIsLoading(false);
+                },(error)=>{
+                    sortQuery === "release-date" ? setSearchResults(newGamesMock) : setSearchResults(popularGamesMock);
                     setIsLoading(false);
                 })
                 .catch((err) => {
@@ -154,6 +160,8 @@ const page = () => {
                 </div>
             </div>
         </div>
+            <ScrollToTopButton />
+
         </>
     )
 }

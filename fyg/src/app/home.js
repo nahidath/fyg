@@ -11,6 +11,8 @@ import PlatformIcon from "@/app/components/PlatformIcon";
 import Carousel from "@/app/components/Carousel";
 import genresList from "./data/genresList";
 import { useRouter } from 'next/navigation';
+import newGamesMock from "@/app/data/newGamesMock";
+import popularGamesMock from "@/app/data/popularGamesMock";
 
 const Home1 = () => {
   const [newGames, setNewGames] = useState([]);
@@ -45,6 +47,8 @@ const Home1 = () => {
       .then((res) => {
         //set only 3 games to be displayed
         setNewGames(res.data.slice(0, 3));
+      },(error)=>{
+        setNewGames(newGamesMock.slice(0, 3));
       })
       .catch((err) => {
         console.log(err);
@@ -63,6 +67,8 @@ const Home1 = () => {
       })
       .then((res) => {
         setPopularGames(res.data.slice(0, 3));
+      },(error)=>{
+        setPopularGames(popularGamesMock.slice(0, 3));
       })
       .catch((err) => {
         console.log(err);
