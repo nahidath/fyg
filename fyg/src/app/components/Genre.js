@@ -8,7 +8,6 @@ const Genre = ({id, name, image_url, tagName }) => {
     const pathname = usePathname();
     //function to go to the search page with the genre as the query
 
-    console.log('tagname',tagName);
     const goToGenre = () => {
         router.push('/search?genre=' + tagName);
     }

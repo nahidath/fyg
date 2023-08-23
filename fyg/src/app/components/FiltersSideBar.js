@@ -5,41 +5,50 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import genresList from "@/app/data/genresList";
-import {useSearchParams} from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const FiltersSideBar = ({
   setSearchResults,
   setNoResults,
   refreshSearchResults,
-    setLoading,
-    // genreQuery
+  setLoading,
 }) => {
   let apiKey = process.env.NEXT_PUBLIC_APP_API_KEY;
-  const [sort, setSort] = useState("relevance");
-  const [platforms, setPlatforms] = useState([]);
-
-  // const [genres, setGenres] = useState([]);
   const searchParams = useSearchParams();
   const query = searchParams.get("q");
   const genreQuery = searchParams.get("genre");
-  const [genres, setGenres] = genreQuery ? useState([genreQuery]) : query && useState([]);
+  const sortQuery = searchParams.get("sort");
+  const [genres, setGenres] = genreQuery
+    ? useState([genreQuery])
+    : useState([]);
+  const [sort, setSort] = sortQuery
+    ? useState(sortQuery)
+    : useState("relevance");
+  const [platforms, setPlatforms] = useState([]);
+  console.log(sort)
 
+  useEffect(() => {
+    setGenres([]);
+  }, [genreQuery == null]);
+  // useEffect(() => {
+  //   setSort("")
+  // }, [sortQuery == null]);
 
   const handleSortChange = (e) => {
     const selectedS = e.target.value;
     let updatedSort;
     if (e.target.checked) {
-        updatedSort = selectedS;
+      updatedSort = selectedS;
     } else {
-        updatedSort = "";
+      updatedSort = "";
     }
     setSort(updatedSort);
 
     // Call getGamesBySortBy if only one sort is selected
     if (updatedSort !== "") {
-        getGamesBySortBy(updatedSort);
+      getGamesBySortBy(updatedSort);
     } else {
-        refreshSearchResults();
+      refreshSearchResults();
     }
     // getGamesBySortBy(sort);
   };
@@ -49,10 +58,10 @@ const FiltersSideBar = ({
     let updatedPlatforms;
     //push the value to the array
     if (e.target.checked) {
-      updatedPlatforms=[...platforms, selectedP];
+      updatedPlatforms = [...platforms, selectedP];
     } else {
       //remove the value from the array
-      updatedPlatforms=platforms.filter((item) => item !== selectedP);
+      updatedPlatforms = platforms.filter((item) => item !== selectedP);
     }
 
     setPlatforms(updatedPlatforms);
@@ -71,8 +80,6 @@ const FiltersSideBar = ({
     if (updatedPlatforms.length === 0) {
       refreshSearchResults();
     }
-
-
   };
 
   const handleGenreChange = (e) => {
@@ -80,11 +87,11 @@ const FiltersSideBar = ({
     const selectedG = e.target.value;
     let updatedGenres;
     if (e.target.checked) {
-        updatedGenres = [...genres, selectedG];
+      updatedGenres = [...genres, selectedG];
     } else {
-        updatedGenres = genres.filter((genre) => genre !== selectedG);
+      updatedGenres = genres.filter((genre) => genre !== selectedG);
     }
-    setGenres(updatedGenres)
+    setGenres(updatedGenres);
 
     // Call getGameByGenre if only one genre is selected
     if (updatedGenres.length >= 1) {
@@ -103,13 +110,12 @@ const FiltersSideBar = ({
       console.log("==0");
       refreshSearchResults();
     }
-
   };
 
   const getGamesByGenre = (genres) => {
     let getData = [];
     let resultsBefore = [];
-    if(genres.length > 0){
+    if (genres.length > 0) {
       axios
         .get(`https://free-to-play-games-database.p.rapidapi.com/api/filter`, {
           params: {
@@ -134,26 +140,25 @@ const FiltersSideBar = ({
           //if there is no results from filters
           if (resultsBefore.length === 0) {
             setLoading(false);
-              setNoResults("No results found for the selected filters");
+            setNoResults("No results found for the selected filters");
           } else {
-                setLoading(false);
-              setSearchResults(resultsBefore);
+            setLoading(false);
+            setSearchResults(resultsBefore);
           }
-
         })
         .catch((err) => {
           console.log(err);
         });
-    }else{
-        refreshSearchResults();
-        setLoading(false);
+    } else {
+      refreshSearchResults();
+      setLoading(false);
     }
   };
 
   const getGamesBySortBy = (sort) => {
     let getData = [];
     let resultsBefore = [];
-    if(sort !== ""){
+    if (sort !== "") {
       axios
         .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
           params: {
@@ -165,37 +170,40 @@ const FiltersSideBar = ({
             "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
           },
         })
-        .then(
-          (res) => {
-            //store the results in getData array to be able to filter them with the resuls from search page
-            getData = res.data;
-              //filter the results from filters that include the query and match the sort or match the genreQuery
-              resultsBefore = query ? getData.filter((game) =>
-                  game.title.toLowerCase().includes(query.toLowerCase())
-              ) : getData.filter((game) => game.genre.toLowerCase() === genreQuery.toLowerCase());
+        .then((res) => {
+          //store the results in getData array to be able to filter them with the resuls from search page
+          getData = res.data;
+          //filter the results from filters that include the query and match the sort or match the genreQuery
+          resultsBefore = query
+            ? getData.filter((game) =>
+                game.title.toLowerCase().includes(query.toLowerCase())
+              )
+            : getData.filter(
+                (game) => game.genre.toLowerCase() === genreQuery.toLowerCase()
+              );
 
-              //if there is no results from filters
-              if (resultsBefore.length === 0) {
-                setLoading(false);
-                  setNoResults("No results found for the selected filters");
-              } else {
-                    setLoading(false);
-                  setSearchResults(resultsBefore);
-              }
-          })
+          //if there is no results from filters
+          if (resultsBefore.length === 0) {
+            setLoading(false);
+            setNoResults("No results found for the selected filters");
+          } else {
+            setLoading(false);
+            setSearchResults(resultsBefore);
+          }
+        })
         .catch((err) => {
           console.log(err);
         });
-    }else{
-        refreshSearchResults();
-        setLoading(false);
+    } else {
+      refreshSearchResults();
+      setLoading(false);
     }
   };
 
   const getGamesByPlatform = (platforms) => {
     let resultsBefore = [];
     let getData = [];
-    if(platforms.length > 0){
+    if (platforms.length > 0) {
       axios
         .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
           params: {
@@ -206,32 +214,33 @@ const FiltersSideBar = ({
             "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
           },
         })
-        .then(
-          (res) => {
-            //store the results in getData array to be able to filter them with the resuls from search page
-            getData = res.data;
-            //filter the results from filters that include the query and match the platforms
-              resultsBefore = query ? getData.filter((game) =>
-                  game.title.toLowerCase().includes(query.toLowerCase())
-              ) : getData.filter((game) => game.genre.toLowerCase() === genreQuery.toLowerCase());
+        .then((res) => {
+          //store the results in getData array to be able to filter them with the resuls from search page
+          getData = res.data;
+          //filter the results from filters that include the query and match the platforms
+          resultsBefore = query
+            ? getData.filter((game) =>
+                game.title.toLowerCase().includes(query.toLowerCase())
+              )
+            : getData.filter(
+                (game) => game.genre.toLowerCase() === genreQuery.toLowerCase()
+              );
 
-              //if there is no results from filters
-              if (resultsBefore.length === 0) {
-                setLoading(false);
-                  setNoResults("No results found for the selected filters");
-              } else {
-                    setLoading(false);
-                  setSearchResults(resultsBefore);
-              }
-
+          //if there is no results from filters
+          if (resultsBefore.length === 0) {
+            setLoading(false);
+            setNoResults("No results found for the selected filters");
+          } else {
+            setLoading(false);
+            setSearchResults(resultsBefore);
           }
-        )
+        })
         .catch((err) => {
           console.log(err);
         });
-    }else{
-        refreshSearchResults();
-        setLoading(false);
+    } else {
+      refreshSearchResults();
+      setLoading(false);
     }
   };
 
@@ -250,7 +259,6 @@ const FiltersSideBar = ({
     refreshSearchResults();
     setLoading(false);
   };
-
 
   return (
     <div className={styles.filters}>
@@ -339,26 +347,25 @@ const FiltersSideBar = ({
           </div>
         </div>
         {!genreQuery && (
-            <div className={styles.filtersBodyBlock}>
-              <h3 className={styles.filtersBlockTitle}>Genre</h3>
-              <div className={`${styles.filtersBlockContent} ${styles.spec}`}>
-                {genresList.map((genre, index) => (
-                    <div className={styles.filtersBlockContentItem} key={index}>
-                      <input
-                          type="checkbox"
-                          id={genre.tagName}
-                          name={genre.tagName}
-                          value={genre.tagName}
-                          onChange={handleGenreChange}
-                          checked={genres.includes(genre.tagName)}
-                      />
-                      <label htmlFor={genre.tagName}>{genre.name}</label>
-                    </div>
-                ))}
-              </div>
+          <div className={styles.filtersBodyBlock}>
+            <h3 className={styles.filtersBlockTitle}>Genre</h3>
+            <div className={`${styles.filtersBlockContent} ${styles.spec}`}>
+              {genresList.map((genre, index) => (
+                <div className={styles.filtersBlockContentItem} key={index}>
+                  <input
+                    type="checkbox"
+                    id={genre.tagName}
+                    name={genre.tagName}
+                    value={genre.tagName}
+                    onChange={handleGenreChange}
+                    checked={genres.includes(genre.tagName)}
+                  />
+                  <label htmlFor={genre.tagName}>{genre.name}</label>
+                </div>
+              ))}
             </div>
+          </div>
         )}
-
       </div>
     </div>
   );

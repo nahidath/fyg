@@ -18,11 +18,15 @@ const page = () => {
     const searchParams = useSearchParams();
     const query = searchParams.get("q");
     let genreQuery = searchParams.get("genre");
-    console.log(genreQuery);
+    let sortQuery = searchParams.get("sort");
     const [inputValue, setInputValue] = useState(query);
     const [searchResults, setSearchResults] = useState([]);
     const [noResults, setNoResults] = useState("No results found");
     const [isLoading, setIsLoading] = useState(false);
+    const sortTitle = {
+        "release-date":"New Games",
+        "popularity":"Popular Games"
+    }
 
     // Get a new searchParams string by merging the current
     // searchParams with a provided key/value pair
@@ -40,7 +44,7 @@ const page = () => {
         e.preventDefault();
         //go to search page with the query
         router.replace(pathname + '?q=' + inputValue);
-        genreQuery="";
+    
     };
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
@@ -49,7 +53,23 @@ const page = () => {
 
 
     const getSearchResults = () => {
-        if(genreQuery){
+        if(sortQuery){
+            axios
+                .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
+                    params: { "sort-by": sortQuery},
+                    headers: {
+                        "X-RapidAPI-Key": apiKey,
+                        "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
+                    },
+                })
+                .then((res) => {
+                    setSearchResults(res.data);
+                    setIsLoading(false);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }else if(genreQuery){
             //if there is a genre query, get the games that match the genre
             axios
                 .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
@@ -108,7 +128,7 @@ const page = () => {
                 </div>
                 <div className={stylesH.headerTxt}>
                     <div className={stylesH.discoverAndFind1}>
-                        {genreQuery ? genreList.find((genre) => genre.tagName === genreQuery).name + " Games" : query && "Search results for " + '"'+ query+ '"'}
+                        {genreQuery ? genreList.find((genre) => genre.tagName === genreQuery).name + " Games" : sortQuery ? sortTitle[sortQuery] : query && "Search results for " + '"'+ query+ '"'}
                     </div>
                     <div className={stylesH.searchInput}>
                         <form onSubmit={search}>
@@ -118,7 +138,7 @@ const page = () => {
                     </div>
                 </div>
                 <div className={stylesSP.below}>
-                    <FiltersSideBar setSearchResults={setSearchResults} setNoResults={setNoResults} refreshSearchResults={getSearchResults} setLoading={setIsLoading} genreQuery={genreQuery} />
+                    <FiltersSideBar setSearchResults={setSearchResults} setNoResults={setNoResults} refreshSearchResults={getSearchResults} setLoading={setIsLoading} />
                     <div className={stylesSP.searchResults}>
                         {searchResults.length > 0 ? searchResults.map((game, index) => (
                             <Card

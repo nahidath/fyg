@@ -81,6 +81,13 @@ const Home1 = () => {
     setInputValue(e.target.value);
   };
 
+  const gotToNewsGames = () => {
+    router.push('/search?sort=release-date');
+  }
+  const gotToPopularGames = () => {
+    router.push('/search?sort=popularity');
+  }
+
 
   useEffect(() => {
     getNewGamesList();
@@ -126,7 +133,7 @@ const Home1 = () => {
                   {/*<Modal isOpen={isModalOpen} onClose={closeModal} screenshots={game.short_screenshots} gameID={game.id} keyIndx={index}/>*/}
                 </>
               ))}
-              <div className={styles.arrowMore}>
+              <div className={styles.arrowMore} onClick={gotToNewsGames}>
                 <img src="arrow.gif" alt="" className={styles.item} />
                 <div className={styles.txt}>More</div>
               </div>
@@ -147,7 +154,7 @@ const Home1 = () => {
                   key={index}
                 />
               ))}
-              <div className={styles.arrowMore}>
+              <div className={styles.arrowMore} onClick={gotToPopularGames}>
                 <img src="arrow.gif" alt="" className={styles.item} />
                 <div className={styles.txt}>More</div>
               </div>
