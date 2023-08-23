@@ -21,8 +21,7 @@ const Modal = ({ isOpen, onClose, gameID }) => {
       .get(`https://free-to-play-games-database.p.rapidapi.com/api/game`, {
         params: { id: gameID.toString() },
         headers: {
-          "X-RapidAPI-Key":
-            apiKey,
+          "X-RapidAPI-Key": apiKey,
           "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
         },
       })
@@ -93,10 +92,9 @@ const Modal = ({ isOpen, onClose, gameID }) => {
                       platform={p}
                       size={20}
                       style={{ marginRight: 4 }}
-                        key={index}
+                      key={index}
                     />
                   ))}
-                  <PlatformIcon size={25} platform={game.platform} />
                 </div>
               </div>
             </div>
