@@ -12,6 +12,8 @@ import genreList from "@/app/data/genresList";
 import popularGamesMock from "@/app/data/popularGamesMock";
 import newGamesMock from "@/app/data/newGamesMock";
 import ScrollToTopButton from "@/app/components/ScrollTopButton";
+import {FaSearch} from "react-icons/fa";
+import styles from "@/app/home.module.css";
 
 
 const page = () => {
@@ -22,6 +24,8 @@ const page = () => {
     const query = searchParams.get("q");
     let genreQuery = searchParams.get("genre");
     let sortQuery = searchParams.get("sort");
+    const [sortSearch, setSortSearch] = useState([]);
+
     const [inputValue, setInputValue] = useState(query);
     const [searchResults, setSearchResults] = useState([]);
     const [noResults, setNoResults] = useState("No results found");
@@ -67,6 +71,7 @@ const page = () => {
                 })
                 .then((res) => {
                     setSearchResults(res.data);
+                    setSortSearch(res.data)
                     setIsLoading(false);
                 },(error)=>{
                     sortQuery === "release-date" ? setSearchResults(newGamesMock) : setSearchResults(popularGamesMock);
@@ -138,13 +143,14 @@ const page = () => {
                     </div>
                     <div className={stylesH.searchInput}>
                         <form onSubmit={search}>
-                            <img className={stylesH.searchIcon1} alt="" src="Search.png" />
+                            <FaSearch className={styles.searchIcon1} color={"#ba62ff"} size={30} />
                             <input value={inputValue} onChange={handleInputChange} className={stylesH.bgChild2} />
                         </form>
                     </div>
                 </div>
                 <div className={stylesSP.below}>
-                    <FiltersSideBar setSearchResults={setSearchResults} setNoResults={setNoResults} refreshSearchResults={getSearchResults} setLoading={setIsLoading} />
+                    <FiltersSideBar setSearchResults={setSearchResults} setNoResults={setNoResults} refreshSearchResults={getSearchResults} setLoading={setIsLoading}
+                    sortSearchResults={sortSearch}/>
                     <div className={stylesSP.searchResults}>
                         {searchResults.length > 0 ? searchResults.map((game, index) => (
                             <Card

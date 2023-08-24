@@ -12,6 +12,7 @@ const FiltersSideBar = ({
   setNoResults,
   refreshSearchResults,
   setLoading,
+    sortSearchResults
 }) => {
   let apiKey = process.env.NEXT_PUBLIC_APP_API_KEY;
   const searchParams = useSearchParams();
@@ -27,6 +28,7 @@ const FiltersSideBar = ({
   const [platforms, setPlatforms] = useState([]);
   console.log("sort",sort)
   console.log("sortQuery",sortQuery)
+  console.log("sortSearchResults",sortSearchResults)
 
   useEffect(() => {
     setGenres([]);
@@ -34,6 +36,7 @@ const FiltersSideBar = ({
   useEffect(() => {
     if(sortQuery===null) setSort("relevance")
   }, [sortQuery]);
+
 
   const handleSortChange = (e) => {
     console.log("handleSortChange")
@@ -48,6 +51,7 @@ const FiltersSideBar = ({
 
     // Call getGamesBySortBy if only one sort is selected
     if (updatedSort !== "") {
+      console.log("gamesBySortBy called with " + updatedSort)
       getGamesBySortBy(updatedSort);
     } else {
       refreshSearchResults();
@@ -134,8 +138,10 @@ const FiltersSideBar = ({
         .then((res) => {
           //store the results in getData array to be able to filter them with the results from search page
           getData = res.data;
-          //filter the results from filters that include the query and match the genres
-          resultsBefore = getData.filter((game) =>
+
+          //match getData with sortSearchResults
+          resultsBefore = sortQuery !=null ? getData.filter((game) => sortSearchResults.includes(game.id))
+          : getData.filter((game) =>
             game.title.toLowerCase().includes(query.toLowerCase())
           );
 
@@ -158,6 +164,7 @@ const FiltersSideBar = ({
   };
 
   const getGamesBySortBy = (sort) => {
+    console.log("getGamesBySortBy inside called with " + sort)
     let getData = [];
     let resultsBefore = [];
     if (sort !== "") {
@@ -176,11 +183,11 @@ const FiltersSideBar = ({
           //store the results in getData array to be able to filter them with the resuls from search page
           getData = res.data;
           //filter the results from filters that include the query and match the sort or match the genreQuery
-          resultsBefore = query
+          resultsBefore = query != null
             ? getData.filter((game) =>
                 game.title.toLowerCase().includes(query.toLowerCase())
               )
-            : getData.filter(
+              : getData.filter(
                 (game) => game.genre.toLowerCase() === genreQuery.toLowerCase()
               );
 
@@ -203,6 +210,7 @@ const FiltersSideBar = ({
   };
 
   const getGamesByPlatform = (platforms) => {
+    console.log("getGamesByPlatform inside called with " + platforms)
     let resultsBefore = [];
     let getData = [];
     if (platforms.length > 0) {
@@ -224,9 +232,12 @@ const FiltersSideBar = ({
             ? getData.filter((game) =>
                 game.title.toLowerCase().includes(query.toLowerCase())
               )
-            : getData.filter(
+            : sortQuery ? getData.map((game) => sortSearchResults.find((id) => id === game.id)) :
+                  getData.filter(
                 (game) => game.genre.toLowerCase() === genreQuery.toLowerCase()
               );
+
+          console.log("resultsBefore",resultsBefore)
 
           //if there is no results from filters
           if (resultsBefore.length === 0) {

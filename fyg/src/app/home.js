@@ -13,6 +13,7 @@ import genresList from "./data/genresList";
 import { useRouter } from 'next/navigation';
 import newGamesMock from "@/app/data/newGamesMock";
 import popularGamesMock from "@/app/data/popularGamesMock";
+import {FaSearch} from "react-icons/fa";
 
 const Home1 = () => {
   const [newGames, setNewGames] = useState([]);
@@ -32,27 +33,37 @@ const Home1 = () => {
   };
 
 
-  const getNewGamesList = () => {
+  const getNewGamesList = async () => {
     //get the date of today with format YYYY-MM-DD
 
-    axios
-      .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
-        params: { "sort-by": "release-date" },
-        headers: {
-          "X-RapidAPI-Key":
-            apiKey,
-          "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
-        },
-      })
-      .then((res) => {
-        //set only 3 games to be displayed
-        setNewGames(res.data.slice(0, 3));
-      },(error)=>{
-        setNewGames(newGamesMock.slice(0, 3));
-      })
-      .catch((err) => {
-        console.log(err);
+    try {
+      const response = await axios.get(`https://www.freetogame.com/api/games`, {
+        params: {"sort-by": "release-date"},
       });
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+    // axios
+    //     .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
+    //       params: {"sort-by": "release-date"},
+    //       headers: {
+    //         "X-RapidAPI-Key":
+    //         apiKey,
+    //         "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
+    //       },
+    //     })
+    //     .then((res) => {
+    //           //set only 3 games to be displayed
+    //           setNewGames(res.data.slice(0, 3));
+    //         }
+    //         // ,(error)=>{
+    //         //   setNewGames(newGamesMock.slice(0, 3));
+    //         // }
+    //     )
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
   };
 
   const getPopularGames = () => {
@@ -113,7 +124,7 @@ const Home1 = () => {
           </div>
           <div className={styles.searchInput}>
             <form onSubmit={search}>
-              <img className={styles.searchIcon1} alt="" src="Search.png" />
+              <FaSearch className={styles.searchIcon1} color={"#ba62ff"} size={30} />
               <input value={inputValue} onChange={handleInputChange} className={styles.bgChild2} />
             </form>
           </div>
@@ -133,10 +144,7 @@ const Home1 = () => {
                     image_url={game.thumbnail}
                     platforms={game.platform}
                     key={index}
-                    // screenshots={game.short_screenshots}
-                    // slug={game.slug}
                   />
-                  {/*<Modal isOpen={isModalOpen} onClose={closeModal} screenshots={game.short_screenshots} gameID={game.id} keyIndx={index}/>*/}
                 </>
               ))}
               <div className={styles.arrowMore} onClick={gotToNewsGames}>

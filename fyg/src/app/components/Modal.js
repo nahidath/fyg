@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "../css/modal.module.css";
-import { FaFeather, FaStar } from "react-icons/fa";
+import {FaCheck, FaFeather, FaStar} from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import Carousel from "@/app/components/Carousel";
 import PlatformIcon from "@/app/components/PlatformIcon";
@@ -9,6 +9,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import Requirements from "@/app/components/Requirements";
+import {useRouter} from "next/navigation";
 
 const Modal = ({ isOpen, onClose, gameID }) => {
   let apiKey = process.env.NEXT_PUBLIC_APP_API_KEY;
@@ -16,6 +17,10 @@ const Modal = ({ isOpen, onClose, gameID }) => {
   const [platformName, setPlatformName] = useState([]);
   const [gp, setgp] = useState("");
   const [gameRequirement, setGameRequirement] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const router = useRouter();
+  const currentUser = typeof window !== 'undefined'? JSON.parse(localStorage.getItem('currentUser')) : null;
+
   const getGameDescription = () => {
     axios
       .get(`https://free-to-play-games-database.p.rapidapi.com/api/game`, {
@@ -36,8 +41,30 @@ const Modal = ({ isOpen, onClose, gameID }) => {
       });
   };
 
+  //function that add the game to the user's favorite list
+    const addToFavorite = () => {
+        //get the current user from local storage
+
+        //if there is no current user, redirect to login page
+        if(!currentUser){
+            router.push('/login');
+        }
+
+        //add the game to the user's favorite list
+        currentUser.favourites.push(gameID);
+        //update the user's data in local storage
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        setIsFavorite(true)
+    }
+
   useEffect(() => {
     getGameDescription();
+    //get the user's favorite list
+    let favUser = currentUser.favourites;
+    //if the game is already in the user's favorite list, return
+    if(favUser.includes(gameID)){
+      setIsFavorite(true)
+    }
     let pNames = [];
     let gamePlatform = gp;
 
@@ -82,7 +109,9 @@ const Modal = ({ isOpen, onClose, gameID }) => {
           </div>
           <div className={styles.verticalDivider}></div>
           <div className={styles.gameAdditionalInfo}>
-            <FaStar className={styles.star} color={"#FFD700"} size={25} />
+            {isFavorite ? <div className={styles.addedToFavorite}><FaCheck color={"#fff"} size={20} /> Added to favorites</div> : <div className={styles.addToFavorite} onClick={addToFavorite}>
+              <FaStar color={"#FFD700"} size={25} /> Add to favorites
+            </div>}
             <div className={styles.platforms}>
               <div className={styles.gameInfoTitle1}>
                 Platforms :

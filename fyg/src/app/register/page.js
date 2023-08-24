@@ -34,9 +34,10 @@ const page = () => {
                 username,
                 email,
                 password,
+                favourites: []
             };
             localStorage.setItem('user', JSON.stringify(userData));
-            alert('User registered and data saved to localStorage.');
+            alert('You have successfully registered! You may now log in.');
             router.push('/login'); // Redirect to login page
         } else {
             alert("Passwords don't match.");
