@@ -16,7 +16,7 @@ import {FaSearch} from "react-icons/fa";
 import styles from "@/app/home.module.css";
 
 
-const page = () => {
+const Page = () => {
     let apiKey = process.env.NEXT_PUBLIC_APP_API_KEY;
     const router = useRouter();
     const pathname = usePathname();
@@ -172,4 +172,4 @@ const page = () => {
     )
 }
 
-export default page;
+export default Page;

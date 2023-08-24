@@ -6,7 +6,7 @@ import {useRouter, usePathname,useSearchParams} from "next/navigation";
 
 
 
-const page = () => {
+const Page = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword,setConfirmPassword] = useState('');
@@ -80,4 +80,4 @@ const page = () => {
     )
 }
 
-export default page;
+export default Page;

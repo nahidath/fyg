@@ -12,7 +12,7 @@ import {FaTrash} from "react-icons/fa";
 
 
 //profile page for the user
-const page = () => {
+const Page = () => {
     const router = useRouter();
     const [favGames, setfavGames] = useState([]);
     let apiKey = process.env.NEXT_PUBLIC_APP_API_KEY;
@@ -121,4 +121,4 @@ const page = () => {
 
 }
 
-export default page;
+export default Page;
