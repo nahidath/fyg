@@ -96,7 +96,7 @@ const Page = () => {
                 },(error)=>{
                     setSearchResults(searchGenreMock.filter((game) => game.category.toLowerCase().includes(genreQuery.toLowerCase())));
                     setIsLoading(false);
-                }
+                })
                 .catch((err) => {
                     console.log(err);
                 });
