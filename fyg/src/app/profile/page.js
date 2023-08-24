@@ -38,7 +38,7 @@ const Page = () => {
 
    //function that get all the games from the user's favorite list
     const getFavoriteGames = () => {
-        let favUser = currentUser.favourites;
+        let favUser = currentUser ? currentUser.favourites : [];
         let favGames = [];
         if(!favUser){
             return;
@@ -66,7 +66,10 @@ const Page = () => {
     //function that remove the game from the user's favorite list
     const removeFromFavorite = (id) => {
         //get the user's favorite list
-        let favUser = currentUser.favourites;
+        let favUser = currentUser ? currentUser.favourites : [];
+        if(!favUser){
+            return;
+        }
         //remove the game from the user's favorite list
         favUser = favUser.filter(game => game !== id);
         //update the user's data in local storage with the new favorite list

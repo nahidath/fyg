@@ -33,37 +33,29 @@ const Home1 = () => {
   };
 
 
-  const getNewGamesList = async () => {
+  const getNewGamesList = () => {
     //get the date of today with format YYYY-MM-DD
 
-    try {
-      const response = await axios.get(`https://www.freetogame.com/api/games`, {
-        params: {"sort-by": "release-date"},
+    axios
+      .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
+        params: { "sort-by": "release-date" },
+        headers: {
+          "X-RapidAPI-Key":
+            apiKey,
+          "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
+        },
+      })
+      .then((res) => {
+        //set only 3 games to be displayed
+        setNewGames(res.data.slice(0, 3));
+      }
+      ,(error)=>{
+        setNewGames(newGamesMock.slice(0, 3));
+      }
+      )
+      .catch((err) => {
+        console.log(err);
       });
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-    // axios
-    //     .get(`https://free-to-play-games-database.p.rapidapi.com/api/games`, {
-    //       params: {"sort-by": "release-date"},
-    //       headers: {
-    //         "X-RapidAPI-Key":
-    //         apiKey,
-    //         "X-RapidAPI-Host": "free-to-play-games-database.p.rapidapi.com",
-    //       },
-    //     })
-    //     .then((res) => {
-    //           //set only 3 games to be displayed
-    //           setNewGames(res.data.slice(0, 3));
-    //         }
-    //         // ,(error)=>{
-    //         //   setNewGames(newGamesMock.slice(0, 3));
-    //         // }
-    //     )
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
   };
 
   const getPopularGames = () => {

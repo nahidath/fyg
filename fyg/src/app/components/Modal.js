@@ -47,7 +47,8 @@ const Modal = ({ isOpen, onClose, gameID }) => {
 
         //if there is no current user, redirect to login page
         if(!currentUser){
-            router.push('/login');
+            alert("You need to login first");
+            return
         }
 
         //add the game to the user's favorite list
