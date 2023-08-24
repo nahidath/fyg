@@ -93,7 +93,10 @@ const Page = () => {
                 .then((res) => {
                     setSearchResults(res.data);
                     setIsLoading(false);
-                })
+                },(error)=>{
+                    setSearchResults(searchGenreMock.filter((game) => game.category.toLowerCase().includes(genreQuery.toLowerCase())));
+                    setIsLoading(false);
+                }
                 .catch((err) => {
                     console.log(err);
                 });
@@ -114,6 +117,11 @@ const Page = () => {
                     //clear the input
                     setInputValue('');
 
+                },(error)=>{
+                    setSearchResults(searchMock.filter((game) => game.title.toLowerCase().includes(query.toLowerCase())));
+                    setIsLoading(false);
+                    //clear the input
+                    setInputValue('');
                 })
                 .catch((err) => {
                     console.log(err);
