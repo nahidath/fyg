@@ -68,9 +68,7 @@ const Modal = ({ isOpen, onClose, gameID }) => {
     getGameDescription();
     //get the user's favorite list
     //if the game is already in the user's favorite list, return
-    if(favUser.includes(gameID)){
-      setIsFavorite(true)
-    }
+
     let pNames = [];
     let gamePlatform = gp;
 
@@ -82,6 +80,15 @@ const Modal = ({ isOpen, onClose, gameID }) => {
       setPlatformName(pNames);
     }
   }, [isOpen]);
+
+    useEffect(() => {
+        if(!favUser){
+            return;
+        }
+        if(favUser.includes(gameID)){
+            setIsFavorite(true);
+        }
+    }, [favUser]);
 
   if (!isOpen) return null;
   return (
