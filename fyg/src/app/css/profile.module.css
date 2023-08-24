@@ -1,0 +1,89 @@
+.form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 56rem;
+    background-color: var(--color-darkGrey);
+    border-radius: 10px;
+    box-shadow: 0px 5px 5px 5px #656565;
+    gap: 2rem;
+}
+
+.profileZone{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 93%;
+    gap : 2rem;
+
+}
+
+.profilePic{
+    width: 8rem;
+    height: 7rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.profileInitialName{
+    font-family: var(--oxanium-1-oxanium-main);
+    font-size: 2rem;
+    color: var(--color-white);
+    margin: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.profileInfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.username{
+    font-family: var(--oxanium-1-oxanium-main);
+    font-size: 2rem;
+    color: var(--color-white);
+    margin: 0;
+}
+
+.email{
+    font-family: var(--oxanium-1-oxanium-main);
+    font-size: 1.2rem;
+    color: var(--color-white);
+    margin: 0;
+}
+
+.gameFavorite{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.gameFavoriteTxt{
+    font-family: var(--oxanium-1-oxanium-main);
+    font-size: 1.5rem;
+    color: var(--color-white);
+    margin: 0;
+    text-decoration: underline;
+}
+
+.gameFavoriteList{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}

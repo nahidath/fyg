@@ -2,6 +2,7 @@
 import styles from "../css/login.module.css";
 import Link from "next/link";
 import {useState} from "react";
+import {useRouter, usePathname,useSearchParams} from "next/navigation";
 
 
 
@@ -10,6 +11,7 @@ const page = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword,setConfirmPassword] = useState('');
     const [email,setEmail] = useState('');
+    const router = useRouter();
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -23,30 +25,23 @@ const page = () => {
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
     }
-    //submit form that matches the username and password with the local storage
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const users = JSON.parse(localStorage.getItem('users'));
-        let user = users.find(user => user.username === username);
-        if(user){
-            alert('Username already exists');
+    //submit form that saves the user to the local storage
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        if (password === confirmPassword) {
+            const userData = {
+                username,
+                email,
+                password,
+            };
+            localStorage.setItem('user', JSON.stringify(userData));
+            alert('User registered and data saved to localStorage.');
+            router.push('/login'); // Redirect to login page
+        } else {
+            alert("Passwords don't match.");
         }
-        else{
-            if(password !== confirmPassword){
-                alert('Passwords do not match');
-            }
-            else{
-                //add user to local storage
-                users.push({
-                    username:username,
-                    password:password,
-                    email:email,
-                });
-                localStorage.setItem('users',JSON.stringify(users));
-                window.location.href = '/login';
-            }
-        }
-    }
+    };
 
 
     return (

@@ -2,11 +2,13 @@
 import styles from "../css/login.module.css";
 import Link from "next/link";
 import {useState} from "react";
+import {useRouter, usePathname,useSearchParams} from "next/navigation";
 
 
 const page = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const router = useRouter();
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -18,14 +20,15 @@ const page = () => {
     //submit form that matches the username and password with the local storage
     const handleSubmit = (e) => {
         e.preventDefault();
-        const users = JSON.parse(localStorage.getItem('users'));
-        let user = users.find(user => user.username === username);
-        if(user && user.password === password){
-            localStorage.setItem('currentUser',JSON.stringify(user));
-            window.location.href = '/';
-        }
-        else{
-            alert('Wrong username or password');
+        if(typeof window !== 'undefined') {
+            const userData = JSON.parse(localStorage.getItem('user'));
+            if (userData.username === username && userData.password === password) {
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+                router.push('/'); // Redirect to home page
+                router.refresh();
+            } else {
+                alert('Wrong username or password');
+            }
         }
     }
 
