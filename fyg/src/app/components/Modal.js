@@ -51,6 +51,11 @@ const Modal = ({ isOpen, onClose, gameID }) => {
             return
         }
 
+        let favUser = currentUser ? currentUser.favourites : null;
+
+        if(!favUser){
+            return;
+        }
         //add the game to the user's favorite list
         currentUser.favourites.push(gameID);
         //update the user's data in local storage
