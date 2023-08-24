@@ -20,6 +20,8 @@ const Modal = ({ isOpen, onClose, gameID }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const router = useRouter();
   const currentUser = typeof window !== 'undefined'? JSON.parse(localStorage.getItem('currentUser')) : null;
+  let favUser = currentUser ? currentUser.favourites : null;
+
 
   const getGameDescription = () => {
     axios
@@ -51,7 +53,6 @@ const Modal = ({ isOpen, onClose, gameID }) => {
             return
         }
 
-        let favUser = currentUser ? currentUser.favourites : null;
 
         if(!favUser){
             return;
@@ -66,7 +67,6 @@ const Modal = ({ isOpen, onClose, gameID }) => {
   useEffect(() => {
     getGameDescription();
     //get the user's favorite list
-    let favUser = currentUser.favourites;
     //if the game is already in the user's favorite list, return
     if(favUser.includes(gameID)){
       setIsFavorite(true)

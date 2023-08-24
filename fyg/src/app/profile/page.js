@@ -20,6 +20,7 @@ const Page = () => {
     const currentUser = typeof window !== 'undefined'? JSON.parse(localStorage.getItem('currentUser')) : null;
     const username = currentUser ? currentUser.username : "";
     const email = currentUser ? currentUser.email : "";
+    let favUser = currentUser ? currentUser.favourites : null;
 
     //function to pick random color and exclude all colors that are too white or too dark
     const getRandomColor = () => {
@@ -38,7 +39,6 @@ const Page = () => {
 
    //function that get all the games from the user's favorite list
     const getFavoriteGames = () => {
-        let favUser = currentUser ? currentUser.favourites : null;
         let favGames = [];
         if(!favUser){
             return;
@@ -66,14 +66,14 @@ const Page = () => {
     //function that remove the game from the user's favorite list
     const removeFromFavorite = (id) => {
         //get the user's favorite list
-        let favUser = currentUser ? currentUser.favourites : null;
+       let fu = [];
         if(!favUser){
             return;
         }
         //remove the game from the user's favorite list
-        favUser = favUser.filter(game => game !== id);
+        fu = favUser.filter(game => game !== id);
         //update the user's data in local storage with the new favorite list
-        currentUser.favourites = favUser;
+        favUser = fu;
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         //update the favorite games list
         setfavGames(favGames.filter(game => game.id !== id));
