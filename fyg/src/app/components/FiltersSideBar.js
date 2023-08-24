@@ -19,20 +19,18 @@ const FiltersSideBar = ({
   const query = searchParams.get("q");
   const genreQuery = searchParams.get("genre");
   const sortQuery = searchParams.get("sort");
-  const [genres, setGenres] = genreQuery
-    ? useState([genreQuery])
-    : useState([]);
-  const [sort, setSort] = sortQuery
-    ? useState(sortQuery)
-    : useState("relevance");
+  const gq = genreQuery ? genreQuery : "";
+  const sq = sortQuery ? sortQuery : "relevance";
+  const [genres, setGenres] = useState([gq]);
+  const [sort, setSort] = useState(sq);
   const [platforms, setPlatforms] = useState([]);
   console.log("sort",sort)
   console.log("sortQuery",sortQuery)
   console.log("sortSearchResults",sortSearchResults)
 
   useEffect(() => {
-    setGenres([]);
-  }, [genreQuery == null]);
+    if (genreQuery===null) setGenres([]);
+  }, [genreQuery]);
   useEffect(() => {
     if(sortQuery===null) setSort("relevance")
   }, [sortQuery]);

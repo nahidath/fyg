@@ -52,7 +52,7 @@ const page = () => {
                     </div>
                 </form>
                 <div className={styles.btnGroup}>
-                    <div className={styles.txtBelow}>Don't have an account ? <Link href="/register" className={styles.registerLink}>Register</Link></div>
+                    <div className={styles.txtBelow}>No account ? <Link href="/register" className={styles.registerLink}>Register</Link></div>
                 </div>
 
 
