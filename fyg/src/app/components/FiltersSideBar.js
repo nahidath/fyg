@@ -230,7 +230,7 @@ const FiltersSideBar = ({
             ? getData.filter((game) =>
                 game.title.toLowerCase().includes(query.toLowerCase())
               )
-            : sortQuery ? getData.map((game) => sortSearchResults.find((id) => id === game.id)) :
+            : sortQuery ? getData.map((game) => sortSearchResults.find((id) => id.id === game.id)) :
                   getData.filter(
                 (game) => game.genre.toLowerCase() === genreQuery.toLowerCase()
               );

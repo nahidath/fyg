@@ -32,10 +32,7 @@ const Page = () => {
     }
 
 
-    //if there is no current user, redirect to login page
-    useEffect(() => {
-        router.push('/login');
-    }, [!currentUser]);
+
 
    //function that get all the games from the user's favorite list
     const getFavoriteGames = () => {
