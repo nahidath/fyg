@@ -3,7 +3,7 @@ import styles from "../css/login.module.css";
 import stylesP from "../css/profile.module.css";
 import Link from "next/link";
 import {useEffect, useState} from "react";
-import {useRouter, usePathname,useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 import axios from "axios";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import Card from "@/app/components/Card";
@@ -30,9 +30,9 @@ const Page = () => {
 
 
     //if there is no current user, redirect to login page
-    if(!currentUser){
+    useEffect(() => {
         router.push('/login');
-    }
+    }, [!currentUser]);
 
    //function that get all the games from the user's favorite list
     const getFavoriteGames = () => {
