@@ -32,4 +32,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
-This project is deployed on Vercel :
+This project is deployed on Vercel : https://fyg-three.vercel.app/
