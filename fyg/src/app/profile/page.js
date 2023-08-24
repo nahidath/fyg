@@ -18,6 +18,8 @@ const Page = () => {
     let apiKey = process.env.NEXT_PUBLIC_APP_API_KEY;
 //get the current user from local storage
     const currentUser = typeof window !== 'undefined'? JSON.parse(localStorage.getItem('currentUser')) : null;
+    const username = currentUser ? currentUser.username : "";
+    const email = currentUser ? currentUser.email : "";
 
     //function to pick random color and exclude all colors that are too white or too dark
     const getRandomColor = () => {
@@ -93,8 +95,8 @@ const Page = () => {
                             </div>
                         </div>
                         <div className={stylesP.profileInfo}>
-                            <div className={stylesP.username}>{currentUser.username}</div>
-                            <div className={stylesP.email}>{currentUser.email}</div>
+                            <div className={stylesP.username}>{username}</div>
+                            <div className={stylesP.email}>{email}</div>
                             <HorizontalDivider marginTop={32} />
                             <div className={stylesP.gameFavorite}>
                                 <div className={stylesP.gameFavoriteTxt}>Your Favorites Games</div>
