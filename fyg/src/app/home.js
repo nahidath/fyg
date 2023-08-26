@@ -6,9 +6,6 @@ import { useState, useEffect } from "react";
 import Card from "@/app/components/Card";
 import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 import Genre from "@/app/components/Genre";
-import Modal from "./components/Modal";
-import PlatformIcon from "@/app/components/PlatformIcon";
-import Carousel from "@/app/components/Carousel";
 import genresList from "./data/genresList";
 import { useRouter } from 'next/navigation';
 import newGamesMock from "@/app/data/newGamesMock";
@@ -19,18 +16,9 @@ const Home1 = () => {
   const [newGames, setNewGames] = useState([]);
   const [popularGames, setPopularGames] = useState([]);
   let apiKey = process.env.NEXT_PUBLIC_APP_API_KEY;
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   const [inputValue, setInputValue] = useState('');
 
-
-  const openModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
 
 
   const getNewGamesList = () => {
@@ -83,7 +71,6 @@ const Home1 = () => {
     e.preventDefault();
     //go to search page with the query
     router.push('/search?q=' + inputValue);
-    console.log(inputValue);
   }
 
   const handleInputChange = (e) => {

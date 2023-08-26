@@ -2,8 +2,8 @@
 
 import styles from "../css/navbar.module.css";
 import Link from "next/link";
-import {FaArrowRightFromBracket, FaRightFromBracket} from "react-icons/fa6";
-import {useRouter, usePathname,useSearchParams} from "next/navigation";
+import {FaArrowRightFromBracket} from "react-icons/fa6";
+import {useRouter} from "next/navigation";
 import {FaUserCircle} from "react-icons/fa";
 
 
@@ -47,13 +47,13 @@ const Navbar = () => {
             </div>
         ) : (
             <div>
-        <Link href="/login" className={styles.login}>
-          Login |
-        </Link>
-        <Link href="/register" className={styles.login}>
-          Register
-        </Link>
-        </div>
+                <Link href="/login" className={styles.login}>
+                  Login |
+                </Link>
+                <Link href="/register" className={styles.login}>
+                  Register
+                </Link>
+            </div>
         )}
       </div>
     </div>

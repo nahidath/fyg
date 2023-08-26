@@ -1,7 +1,6 @@
 'use client';
 import styles from "../css/login.module.css";
 import stylesP from "../css/profile.module.css";
-import Link from "next/link";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import axios from "axios";

@@ -5,9 +5,8 @@ import {usePathname, useRouter} from "next/navigation";
 
 const Genre = ({id, name, image_url, tagName }) => {
     const router = useRouter();
-    const pathname = usePathname();
-    //function to go to the search page with the genre as the query
 
+    //function to go to the search page with the genre as the query
     const goToGenre = () => {
         router.push('/search?genre=' + tagName);
     }

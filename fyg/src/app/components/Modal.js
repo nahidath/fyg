@@ -18,7 +18,6 @@ const Modal = ({ isOpen, onClose, gameID }) => {
   const [gp, setgp] = useState("");
   const [gameRequirement, setGameRequirement] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
-  const router = useRouter();
   const currentUser = typeof window !== 'undefined'? JSON.parse(localStorage.getItem('currentUser')) : null;
   let favUser = currentUser ? currentUser.favourites : null;
 
@@ -36,7 +35,6 @@ const Modal = ({ isOpen, onClose, gameID }) => {
         setGame(res.data);
         setgp(res.data.platform);
         setGameRequirement(res.data.minimum_system_requirements);
-        // console.log("gd", game.platform);
       })
       .catch((err) => {
         console.log(err);
@@ -100,9 +98,6 @@ const Modal = ({ isOpen, onClose, gameID }) => {
           color={"#fff"}
           size={30}
         />
-        {/*{game.map((game, index) => (*/}
-        {/*    <>*/}
-
         <div className={styles.gameName}>{game.title}</div>
         <div className={styles.divider}></div>
         <div className={styles.gameBelow}>

@@ -129,12 +129,6 @@
   margin-top: 1rem;
 }
 
-.star {
-  /*width: 1.5rem;*/
-  /*height: 1.5rem;*/
-  /*object-fit: cover;*/
-}
-
 .platforms {
   display: flex;
   flex-direction: row;

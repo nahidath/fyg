@@ -11,7 +11,6 @@ const Carousel = ({ images }) => {
         autoplay: true,
         autoplaySpeed: 2000,
     };
-    console.log("images",images);
 
     return (
         <div className={styles.carousel}>

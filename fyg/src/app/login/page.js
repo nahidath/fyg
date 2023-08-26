@@ -2,7 +2,7 @@
 import styles from "../css/login.module.css";
 import Link from "next/link";
 import {useState} from "react";
-import {useRouter, usePathname,useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 
 
 const Page = () => {

@@ -24,9 +24,6 @@ const FiltersSideBar = ({
   const [genres, setGenres] = useState([gq]);
   const [sort, setSort] = useState(sq);
   const [platforms, setPlatforms] = useState([]);
-  console.log("sort",sort)
-  console.log("sortQuery",sortQuery)
-  console.log("sortSearchResults",sortSearchResults)
 
   useEffect(() => {
     if (genreQuery===null) setGenres([]);
@@ -37,7 +34,6 @@ const FiltersSideBar = ({
 
 
   const handleSortChange = (e) => {
-    console.log("handleSortChange")
     const selectedS = e.target.value;
     let updatedSort;
     if (e.target.checked) {
@@ -49,12 +45,10 @@ const FiltersSideBar = ({
 
     // Call getGamesBySortBy if only one sort is selected
     if (updatedSort !== "") {
-      console.log("gamesBySortBy called with " + updatedSort)
       getGamesBySortBy(updatedSort);
     } else {
       refreshSearchResults();
     }
-    // getGamesBySortBy(sort);
   };
 
   const handlePlatformChange = (e) => {
@@ -104,14 +98,11 @@ const FiltersSideBar = ({
 
     // Call getGameByGenre if one genre is unselected
     if (updatedGenres.length <= 1) {
-      console.log("<=1");
-      console.log(updatedGenres);
       getGamesByGenre(updatedGenres);
     }
 
     // Call refreshSearchResults if all genres are unselected
     if (updatedGenres.length === 0) {
-      console.log("==0");
       refreshSearchResults();
     }
   };
@@ -162,7 +153,6 @@ const FiltersSideBar = ({
   };
 
   const getGamesBySortBy = (sort) => {
-    console.log("getGamesBySortBy inside called with " + sort)
     let getData = [];
     let resultsBefore = [];
     if (sort !== "") {
@@ -208,7 +198,6 @@ const FiltersSideBar = ({
   };
 
   const getGamesByPlatform = (platforms) => {
-    console.log("getGamesByPlatform inside called with " + platforms)
     let resultsBefore = [];
     let getData = [];
     if (platforms.length > 0) {
@@ -235,8 +224,6 @@ const FiltersSideBar = ({
                 (game) => game.genre.toLowerCase() === genreQuery.toLowerCase()
               );
 
-          console.log("resultsBefore",resultsBefore)
-
           //if there is no results from filters
           if (resultsBefore.length === 0) {
             setLoading(false);
@@ -255,10 +242,6 @@ const FiltersSideBar = ({
     }
   };
 
-  const handleApplyFilters = (e) => {
-    e.preventDefault();
-    getGamesByGenre();
-  };
 
   const handleClearFilters = (e) => {
     //e.preventDefault();
