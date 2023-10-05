@@ -32,6 +32,11 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
+## Screenshots
+![Capture d'écran 2023-10-05 033824](https://github.com/nahidath/fyg/assets/36660735/5389bbe3-d3a0-41b2-be2f-60a4103900ad)
+![Capture d'écran 2023-08-26 002348](https://github.com/nahidath/fyg/assets/36660735/f3b9aebc-f531-44fb-9661-01d8dd211a71)
+![Capture d'écran 2023-08-26 002410](https://github.com/nahidath/fyg/assets/36660735/4aafe8a6-7161-4bb0-8692-10478df90722)
+
 ## Deploy on Vercel
 
 This project is deployed on Vercel : https://fyg-three.vercel.app/
